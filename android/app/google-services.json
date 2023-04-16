@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "496396453684",
+    "project_id": "weeklychallenge-4a266",
+    "storage_bucket": "weeklychallenge-4a266.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496396453684:android:046566568cdcb461334761",
+        "android_client_info": {
+          "package_name": "com.example.weekly_challenge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496396453684-rqg2a6hf6g031j02836fjhslgm1rq9tl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgy0fBoCiVZjdqPo5DM6AsexKem_SbZjo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496396453684-rqg2a6hf6g031j02836fjhslgm1rq9tl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
