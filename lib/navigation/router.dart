@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:weekly_challenge/authentication/authentication.dart';
 import 'package:weekly_challenge/authentication/login_container.dart';
 import 'package:weekly_challenge/authentication/signup_container.dart';
+import 'package:weekly_challenge/homescreen/homescreen.dart';
 import 'package:weekly_challenge/navigation/gorouter_refresh_stream.dart';
 
 final GoRouter router = GoRouter(
   redirect: (context, state) {
+    return null;
+    //eigentlicher code hier nur zum testen auskommentiert
     final bool loggedIn = FirebaseAuth.instance.currentUser != null;
     const loginLocation = "/login";
     final loggingIn = state.subloc == loginLocation;
@@ -15,6 +18,9 @@ final GoRouter router = GoRouter(
     const homeLocation = "/";
 
     if (!loggedIn) {
+      if (state.subloc == "/signup") {
+        return null;
+      }
       return loginLocation;
     }
 
@@ -32,7 +38,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return Container();
+        return const HomeScreen();
       },
       routes: <RouteBase>[
         GoRoute(

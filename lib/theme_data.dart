@@ -32,25 +32,25 @@ final ThemeData themeData = ThemeData(
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.whiteColor,
+        color: App.primaryColor,
       ),
       labelMedium: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.whiteColor,
+        color: App.primaryColor,
       ),
       labelLarge: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.whiteColor,
+        color: App.primaryColor,
       ),
       headlineLarge: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold,
         decoration: TextDecoration.none,
-        color: App.whiteColor,
+        color: App.primaryColor,
       ),
     ));
 

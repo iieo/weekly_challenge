@@ -28,9 +28,9 @@ void main() async {
 class App extends StatelessWidget {
   App({super.key});
 
-  static const double defaultMargin = 20;
+  static const double defaultMargin = 30;
   static const EdgeInsets defaultPadding =
-      EdgeInsets.symmetric(horizontal: 10, vertical: 20);
+      EdgeInsets.symmetric(horizontal: 20, vertical: 35);
   static const Color primaryColor = Color.fromARGB(255, 8, 18, 61);
   static const Color whiteColor = Color.fromARGB(255, 210, 210, 210);
   static const Color blackColor = Color.fromARGB(255, 10, 10, 10);
