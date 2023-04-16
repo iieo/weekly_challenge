@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weekly_challenge/main.dart';
 
 import '../backend/firebase_handler.dart';
 import 'authentication.dart';
 
-class SingUpContainer extends StatefulWidget {
-  SingUpContainer({super.key});
+class SignUpContainer extends StatefulWidget {
+  const SignUpContainer({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
   @override
-  State<SingUpContainer> createState() => _SingUpContainer();
+  State<SignUpContainer> createState() => _SignUpContainer();
 }
 
-class _SingUpContainer extends State<SingUpContainer> {
+class _SignUpContainer extends State<SignUpContainer> {
   final double loginWidth = 300;
 
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final checkPasswordController = TextEditingController();
   final emailController = TextEditingController();
@@ -31,18 +25,6 @@ class _SingUpContainer extends State<SingUpContainer> {
   bool loading = false;
   bool passwordsMatch = false;
   String infoText = '';
-
-  void UpdateLoading(bool isLoading) {
-    setState(() {
-      loading = isLoading;
-    });
-  }
-
-  void UpdateInfoText(String text) {
-    setState(() {
-      infoText = text;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +35,20 @@ class _SingUpContainer extends State<SingUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: App.defaultPadding,
+                child: TextFormField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                      hoverColor: Colors.black,
+                      border: OutlineInputBorder(),
+                      labelText: 'Name',
+                      hintText: 'Enter valid name.'),
+                ),
+              )),
+          SizedBox(
+              width: loginWidth,
+              child: Padding(
+                padding: App.defaultPadding,
                 child: TextFormField(
                   key: passwordValidator,
                   controller: emailController,
@@ -67,7 +62,7 @@ class _SingUpContainer extends State<SingUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: App.defaultPadding,
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -80,17 +75,21 @@ class _SingUpContainer extends State<SingUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: App.defaultPadding,
                 child: TextField(
                   controller: checkPasswordController,
                   obscureText: true,
                   onChanged: (value) {
                     if (value != passwordController.text) {
-                      UpdateInfoText("Passwords don't match");
+                      setState(() {
+                        infoText = "Passwords don't match";
+                      });
                       passwordsMatch = false;
                     } else {
                       passwordsMatch = true;
-                      UpdateInfoText("");
+                      setState(() {
+                        infoText = "";
+                      });
                     }
                   },
                   decoration: const InputDecoration(
@@ -103,17 +102,22 @@ class _SingUpContainer extends State<SingUpContainer> {
               width: loginWidth,
               height: 65,
               child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: App.defaultPadding,
                   child: ElevatedButton(
                     onPressed: () {
                       if (!passwordsMatch) {
                         return;
                       }
-                      UpdateLoading(true);
-                      TrySignup(emailController.text, passwordController.text)
+                      setState(() {
+                        loading = true;
+                      });
+                      FirebaseHandler.trySignup(nameController.text,
+                              emailController.text, passwordController.text)
                           .then((value) {
-                        UpdateInfoText('');
-                        UpdateLoading(false);
+                        setState(() {
+                          loading = false;
+                          infoText = "";
+                        });
 
                         showDialog(
                             context: context,
@@ -133,15 +137,23 @@ class _SingUpContainer extends State<SingUpContainer> {
                               );
                             });
                       }).timeout(const Duration(seconds: 5), onTimeout: () {
-                        UpdateInfoText("Connection timed out.");
-                        UpdateLoading(false);
+                        setState(() {
+                          loading = false;
+                          infoText = "Connection timed out.";
+                        });
                       }).onError((error, stackTrace) {
                         if (error is FirebaseAuthException) {
-                          UpdateInfoText(GetFirebaseErrorText(error));
+                          setState(() {
+                            infoText =
+                                FirebaseHandler.getFirebaseErrorText(error);
+                            loading = false;
+                          });
                         } else {
-                          UpdateInfoText("Unkown Error.");
+                          setState(() {
+                            infoText = "Unknown error occured.";
+                            loading = false;
+                          });
                         }
-                        UpdateLoading(false);
                       });
                     },
                     child: const Text('Sign up'),
@@ -150,18 +162,18 @@ class _SingUpContainer extends State<SingUpContainer> {
               width: loginWidth,
               height: 40,
               child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: App.defaultPadding,
                   child: InkWell(
                       child: const Text("Have an account? Log in.",
                           style: TextStyle(color: Colors.blue)),
                       onTap: () {
-                        context.go("/authentication/login");
+                        GoRouter.of(context).go("/login");
                       }))),
           SizedBox(
               width: loginWidth,
               height: 40,
               child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: App.defaultPadding,
                   child: Text(
                     infoText,
                     style: const TextStyle(color: Colors.red),

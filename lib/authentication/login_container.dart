@@ -6,16 +6,8 @@ import '../backend/firebase_handler.dart';
 import 'authentication.dart';
 
 class LoginContainer extends StatefulWidget {
-  LoginContainer({super.key});
+  const LoginContainer({super.key});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
   @override
   State<LoginContainer> createState() => _LoginContainer();
 }
@@ -75,7 +67,7 @@ class _LoginContainer extends State<LoginContainer> {
                       hintText: 'Enter your password'),
                 ),
               )),
-          SizedBox(
+          Container(
               width: loginWidth,
               height: 65,
               child: Padding(
@@ -83,7 +75,8 @@ class _LoginContainer extends State<LoginContainer> {
                   child: ElevatedButton(
                     onPressed: () {
                       UpdateLoading(true);
-                      TryLogin(emailController.text, passwordController.text)
+                      FirebaseHandler.tryLogin(
+                              emailController.text, passwordController.text)
                           .then((value) {
                         UpdateInfoText('Login successful.');
                         UpdateLoading(false);
@@ -93,7 +86,8 @@ class _LoginContainer extends State<LoginContainer> {
                         UpdateLoading(false);
                       }).onError((error, stackTrace) {
                         if (error is FirebaseAuthException) {
-                          UpdateInfoText(GetFirebaseErrorText(error));
+                          UpdateInfoText(
+                              FirebaseHandler.getFirebaseErrorText(error));
                         } else {
                           UpdateInfoText("Unkown Error.");
                         }
@@ -115,7 +109,8 @@ class _LoginContainer extends State<LoginContainer> {
                                 style: TextStyle(color: Colors.blue)),
                             onTap: () {
                               UpdateLoading(true);
-                              ForgotPassword(emailController.text)
+                              FirebaseHandler.forgotPassword(
+                                      emailController.text)
                                   .then((value) {
                                 UpdateInfoText('Password reset email sent.');
                                 showDialog(
@@ -142,7 +137,9 @@ class _LoginContainer extends State<LoginContainer> {
                                 UpdateLoading(false);
                               }).onError((error, stackTrace) {
                                 if (error is FirebaseAuthException) {
-                                  UpdateInfoText(GetFirebaseErrorText(error));
+                                  UpdateInfoText(
+                                      FirebaseHandler.getFirebaseErrorText(
+                                          error));
                                 } else {
                                   UpdateInfoText("Unkown Error.");
                                 }
@@ -153,7 +150,7 @@ class _LoginContainer extends State<LoginContainer> {
                             child: const Text("Create User Account.",
                                 style: TextStyle(color: Colors.blue)),
                             onTap: () {
-                              context.go("/authentication/signup");
+                              GoRouter.of(context).go("/signup");
                             })
                       ]))),
           SizedBox(
