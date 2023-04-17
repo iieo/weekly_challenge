@@ -13,6 +13,7 @@ final ThemeData themeData = ThemeData(
         TargetPlatform.windows: NoPageTransitionBuilder(),
       },
     ),
+    cardColor: App.primaryColorBrighter,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     primarySwatch: const MaterialColor(0xFFFEFAE0, {
       50: Color(0xfff2f2f2),
@@ -28,29 +29,41 @@ final ThemeData themeData = ThemeData(
     }),
     primaryColor: App.primaryColor,
     textTheme: const TextTheme(
-      labelSmall: TextStyle(
+      titleSmall: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.primaryColor,
+        color: App.whiteColorDarker,
       ),
-      labelMedium: TextStyle(
+      titleMedium: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.primaryColor,
+        color: App.whiteColor,
       ),
-      labelLarge: TextStyle(
+      titleLarge: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.normal,
         decoration: TextDecoration.none,
-        color: App.primaryColor,
+        color: App.whiteColor,
       ),
-      headlineLarge: TextStyle(
+      labelSmall: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.none,
+        color: Colors.white,
+      ),
+      labelMedium: TextStyle(
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.none,
+        color: Colors.white,
+      ),
+      labelLarge: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold,
         decoration: TextDecoration.none,
-        color: App.primaryColor,
+        color: Colors.white,
       ),
     ));
 

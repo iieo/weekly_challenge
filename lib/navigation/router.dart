@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:weekly_challenge/authentication/authentication.dart';
 import 'package:weekly_challenge/authentication/login_container.dart';
 import 'package:weekly_challenge/authentication/signup_container.dart';
+import 'package:weekly_challenge/challenges_screen/challenges_screen.dart';
 import 'package:weekly_challenge/homescreen/homescreen.dart';
 import 'package:weekly_challenge/navigation/gorouter_refresh_stream.dart';
 
@@ -53,6 +54,13 @@ final GoRouter router = GoRouter(
           path: 'signup',
           builder: (BuildContext context, GoRouterState state) {
             return const AuthScreen(child: SignUpContainer());
+          },
+        ),
+        GoRoute(
+          name: 'challenges',
+          path: 'challenges',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ChallengesScreen();
           },
         ),
       ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 
-import '../backend/firebase_handler.dart';
+import '../firebase/firebase_auth_handler.dart';
 import 'authentication.dart';
 
 class LoginContainer extends StatefulWidget {
@@ -75,19 +75,19 @@ class _LoginContainer extends State<LoginContainer> {
                   child: ElevatedButton(
                     onPressed: () {
                       UpdateLoading(true);
-                      FirebaseHandler.tryLogin(
+                      FirebaseAuthHandler.tryLogin(
                               emailController.text, passwordController.text)
                           .then((value) {
                         UpdateInfoText('Login successful.');
                         UpdateLoading(false);
-                        context.go('/overview');
+                        context.go('/');
                       }).timeout(const Duration(seconds: 5), onTimeout: () {
                         UpdateInfoText("Connection timed out.");
                         UpdateLoading(false);
                       }).onError((error, stackTrace) {
                         if (error is FirebaseAuthException) {
                           UpdateInfoText(
-                              FirebaseHandler.getFirebaseErrorText(error));
+                              FirebaseAuthHandler.getFirebaseErrorText(error));
                         } else {
                           UpdateInfoText("Unkown Error.");
                         }
@@ -109,7 +109,7 @@ class _LoginContainer extends State<LoginContainer> {
                                 style: TextStyle(color: Colors.blue)),
                             onTap: () {
                               UpdateLoading(true);
-                              FirebaseHandler.forgotPassword(
+                              FirebaseAuthHandler.forgotPassword(
                                       emailController.text)
                                   .then((value) {
                                 UpdateInfoText('Password reset email sent.');
@@ -138,7 +138,7 @@ class _LoginContainer extends State<LoginContainer> {
                               }).onError((error, stackTrace) {
                                 if (error is FirebaseAuthException) {
                                   UpdateInfoText(
-                                      FirebaseHandler.getFirebaseErrorText(
+                                      FirebaseAuthHandler.getFirebaseErrorText(
                                           error));
                                 } else {
                                   UpdateInfoText("Unkown Error.");

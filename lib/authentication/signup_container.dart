@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import 'package:weekly_challenge/main.dart';
 
-import '../backend/firebase_handler.dart';
+import '../firebase/firebase_auth_handler.dart';
 import 'authentication.dart';
 
 class SignUpContainer extends StatefulWidget {
@@ -16,7 +15,6 @@ class SignUpContainer extends StatefulWidget {
 class _SignUpContainer extends State<SignUpContainer> {
   final double loginWidth = 300;
 
-  final nameController = TextEditingController();
   final passwordController = TextEditingController();
   final checkPasswordController = TextEditingController();
   final emailController = TextEditingController();
@@ -35,20 +33,7 @@ class _SignUpContainer extends State<SignUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: App.defaultPadding,
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                      hoverColor: Colors.black,
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
-                      hintText: 'Enter valid name.'),
-                ),
-              )),
-          SizedBox(
-              width: loginWidth,
-              child: Padding(
-                padding: App.defaultPadding,
+                padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   key: passwordValidator,
                   controller: emailController,
@@ -62,7 +47,7 @@ class _SignUpContainer extends State<SignUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: App.defaultPadding,
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: passwordController,
                   obscureText: true,
@@ -75,7 +60,7 @@ class _SignUpContainer extends State<SignUpContainer> {
           SizedBox(
               width: loginWidth,
               child: Padding(
-                padding: App.defaultPadding,
+                padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: checkPasswordController,
                   obscureText: true,
@@ -102,7 +87,7 @@ class _SignUpContainer extends State<SignUpContainer> {
               width: loginWidth,
               height: 65,
               child: Padding(
-                  padding: App.defaultPadding,
+                  padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
                     onPressed: () {
                       if (!passwordsMatch) {
@@ -111,7 +96,7 @@ class _SignUpContainer extends State<SignUpContainer> {
                       setState(() {
                         loading = true;
                       });
-                      FirebaseHandler.trySignup(nameController.text,
+                      FirebaseAuthHandler.trySignup("dummyAccount",
                               emailController.text, passwordController.text)
                           .then((value) {
                         setState(() {
@@ -129,7 +114,7 @@ class _SignUpContainer extends State<SignUpContainer> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      context.go('/authentication/login');
+                                      GoRouter.of(context).go("/login");
                                     },
                                     child: const Text("Ok"),
                                   )
@@ -145,7 +130,7 @@ class _SignUpContainer extends State<SignUpContainer> {
                         if (error is FirebaseAuthException) {
                           setState(() {
                             infoText =
-                                FirebaseHandler.getFirebaseErrorText(error);
+                                FirebaseAuthHandler.getFirebaseErrorText(error);
                             loading = false;
                           });
                         } else {
@@ -162,7 +147,7 @@ class _SignUpContainer extends State<SignUpContainer> {
               width: loginWidth,
               height: 40,
               child: Padding(
-                  padding: App.defaultPadding,
+                  padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                       child: const Text("Have an account? Log in.",
                           style: TextStyle(color: Colors.blue)),
@@ -173,7 +158,7 @@ class _SignUpContainer extends State<SignUpContainer> {
               width: loginWidth,
               height: 40,
               child: Padding(
-                  padding: App.defaultPadding,
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
                     infoText,
                     style: const TextStyle(color: Colors.red),
