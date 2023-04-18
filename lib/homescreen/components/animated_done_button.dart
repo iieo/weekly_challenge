@@ -99,7 +99,8 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
                       child: Button(
                         onPressed: _onPressed,
                         text: "Erledigt?",
-                        backgroundColor: App.secondaryColor,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
                         foregorundColor: Colors.white,
                       )));
             })
