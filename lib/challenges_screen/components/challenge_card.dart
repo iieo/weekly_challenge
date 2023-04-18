@@ -32,13 +32,13 @@ class ChallengeCard extends StatelessWidget {
                                 prefilledData: challenge,
                               )),
                       icon: Icon(Icons.edit,
-                          color: Theme.of(context).colorScheme.tertiary)),
+                          color: Theme.of(context).colorScheme.onPrimary)),
                   IconButton(
                       onPressed: () => context
                           .read<FirestoreHandler>()
                           .deleteChallenge(challenge),
                       icon: Icon(Icons.delete,
-                          color: Theme.of(context).colorScheme.tertiary))
+                          color: Theme.of(context).colorScheme.onPrimary))
                 ])));
   }
 }
