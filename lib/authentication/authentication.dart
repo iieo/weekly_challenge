@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/main.dart';
 
 class AuthScreen extends StatefulWidget {
   final double width;
@@ -34,16 +35,15 @@ class _AuthScreen extends State<AuthScreen> {
             child: Material(
                 child: Container(
                     decoration: BoxDecoration(
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: App.whiteColor,
                             spreadRadius: 5,
                             blurRadius: 7,
-                            offset: const Offset(
-                                0, 3), // changes position of shadow
+                            offset: Offset(0, 3), // changes position of shadow
                           ),
                         ],
-                        color: Colors.white,
+                        color: App.primaryColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.black)),
                     width: widget.width,
