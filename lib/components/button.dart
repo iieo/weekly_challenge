@@ -6,6 +6,7 @@ class Button extends StatelessWidget {
   final Color? backgroundColor;
   final Function() onPressed;
   final String? text;
+  final Widget? child;
   final double borderRadius;
   final Icon? icon;
 
@@ -13,6 +14,7 @@ class Button extends StatelessWidget {
     super.key,
     this.text,
     this.icon,
+    this.child,
     required this.onPressed,
     this.foregorundColor,
     this.backgroundColor,
@@ -20,6 +22,9 @@ class Button extends StatelessWidget {
   });
 
   Widget _buildChild() {
+    if (child != null) {
+      return child!;
+    }
     if (text != null) {
       return Text(text!);
     } else if (icon != null) {
