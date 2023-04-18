@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class FirestoreHandler extends ChangeNotifier {
   List<Challenge> challenges = [];
+  List<ChallengeParticipation> challengeParticipations = [];
   Participant? participant;
 
   Future<void> _fetchChallenges() async {
@@ -69,10 +71,57 @@ class FirestoreHandler extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateParticipant(Participant participant) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(participant.id)
+        .update(participant.toMap());
+    this.participant = participant;
+    notifyListeners();
+  }
+
+  Future<void> addChallengeParticipation(Challenge challenge) async {
+    ChallengeParticipation challengeParticipation = ChallengeParticipation(
+      challengeId: challenge.id!,
+      pariticipantId: participant!.id,
+      dateCompleted: DateTime.now(),
+    );
+    await FirebaseFirestore.instance
+        .collection('challengeParticipations')
+        .add(challengeParticipation.toMap());
+    challengeParticipations.add(challengeParticipation);
+    notifyListeners();
+  }
+
+  Future<void> _fetchChallengeParticipations() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('challengeParticipations')
+        .where('pariticipantId', isEqualTo: participant!.id)
+        .get();
+
+    challengeParticipations = querySnapshot.docs
+        .map((e) => ChallengeParticipation.fromMap(e.id, e.data()))
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> deleteChallengeParticipation(
+      ChallengeParticipation challengeParticipation) async {
+    await FirebaseFirestore.instance
+        .collection('challengeParticipations')
+        .doc(challengeParticipation.id)
+        .delete();
+    challengeParticipations
+        .removeWhere((element) => element.id == challengeParticipation.id);
+    notifyListeners();
+  }
+
   ///this method is called once the user has logged in
   void fetchData() async {
     print('fetching data');
     await _fetchChallenges();
+    await _fetchChallengeParticipations();
     await _fetchParticipant();
     await _fetchParticipantsProfilePicture();
   }

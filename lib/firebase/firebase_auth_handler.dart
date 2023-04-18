@@ -35,7 +35,7 @@ class FirebaseAuthHandler {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(credentials.user!.uid)
-        .set({'name': name});
+        .set({'name': name, 'email': email, 'points': 0});
     await FirebaseAuth.instance.currentUser!.reload();
   }
 
