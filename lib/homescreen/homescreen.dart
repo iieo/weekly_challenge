@@ -55,17 +55,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 widthFactor: 0.8,
                 child: ListView(
                   children: [
-                    Box(
+                    const Box(
                       headline: "Esse jeden Tag einen Socken",
                       description: "Challenge",
-                      color: Theme.of(context).colorScheme.primaryContainer,
                       children: [],
                     ),
                     const SizedBox(height: 35),
                     Box(
                       headline: "Heute",
                       description: "Challenge erledigt?",
-                      color: Theme.of(context).colorScheme.primaryContainer,
                       children: [
                         AnimatedDoneButton(
                           onDone: () => _done(context),
@@ -74,12 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     const SizedBox(height: 35),
-                    Box(
+                    const Box(
                       headline: "Deine Erfolg",
                       description: "Aktuelle Woche",
-                      color: Theme.of(context).colorScheme.primaryContainer,
                       children: [
-                        //übersicht der Woche
                         WeekStepper(),
                       ],
                     )

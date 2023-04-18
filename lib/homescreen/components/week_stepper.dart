@@ -57,6 +57,10 @@ class WeekStepper extends StatelessWidget {
       lineType: LineType.normal,
       direction: Axis.vertical,
       showLoadingAnimation: false,
+      defaultLineColor: Theme.of(context).colorScheme.onPrimary,
+      lineDotRadius: 2,
+      borderThickness: 0,
+      
     );
   }
 }

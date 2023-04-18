@@ -4,12 +4,10 @@ import 'package:weekly_challenge/main.dart';
 class Box extends StatelessWidget {
   final String headline;
   final String description;
-  final Color color;
   final List<Widget>? children;
   final List<Widget>? sideChildren;
   const Box(
       {super.key,
-      required this.color,
       this.children,
       this.sideChildren,
       required this.headline,
@@ -21,7 +19,7 @@ class Box extends StatelessWidget {
         padding: App.defaultPadding,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: color,
+          color: Theme.of(context).colorScheme.primary,
         ),
         child: Row(
             mainAxisSize: MainAxisSize.min,
