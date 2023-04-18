@@ -36,7 +36,7 @@ class App extends StatelessWidget {
   static const Color primaryColorBrighter = Color.fromARGB(255, 24, 43, 69);
   static const Color whiteColor = Color.fromARGB(255, 205, 215, 245);
   static const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
-  static const Color secondaryColor = Color.fromARGB(255, 12, 201, 171);
+  static const Color secondaryColor = Color.fromARGB(255, 61, 194, 143);
   static const Color secondaryColorDarker = Color.fromARGB(255, 11, 51, 65);
   static const String name = 'Challenge';
   static const String version = '0.0.1';
