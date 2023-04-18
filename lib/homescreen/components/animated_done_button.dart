@@ -62,7 +62,10 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
 
   @override
   Widget build(BuildContext context) {
-    bool isDoneForToday = context.watch<FirestoreHandler>().isDoneForToday;
+    bool? isDoneForToday = context.watch<FirestoreHandler>().isDoneForToday;
+    if (isDoneForToday == null) {
+      return const CircularProgressIndicator();
+    }
     if (isDoneForToday && isLoading) {
       _controller.value = 1.0;
       isLoading = false;
