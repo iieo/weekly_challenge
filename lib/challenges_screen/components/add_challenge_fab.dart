@@ -12,7 +12,7 @@ class AddChallengeFloatingButton extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10))),
         onPressed: () => showDialog(
             context: context, builder: (context) => const AddChallengeDialog()),
-        backgroundColor: App.secondaryColor,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         label:
             Text("Challenges", style: Theme.of(context).textTheme.labelMedium),
         icon: const Icon(Icons.add, size: 25, color: Colors.white));
