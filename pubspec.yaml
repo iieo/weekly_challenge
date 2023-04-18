@@ -25,6 +25,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   cached_network_image: ^3.2.3
   lottie: ^2.3.2
+  easy_stepper: ^0.5.0
   
 
 dev_dependencies:

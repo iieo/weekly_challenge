@@ -1,7 +1,9 @@
+import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/challenges.dart';
+import 'package:weekly_challenge/utils.dart';
 
 class WeekStepper extends StatelessWidget {
   const WeekStepper({super.key});
@@ -13,7 +15,7 @@ class WeekStepper extends StatelessWidget {
         context.watch<FirestoreHandler>().getChallengeForToday();
 
     if (todaysChallenge == null) {
-      return const Text("No challenge for today");
+      return const CircularProgressIndicator();
     }
     DateTime firstDate = todaysChallenge.activeSince!;
     for (int i = 0; i < 7; i++) {
@@ -24,26 +26,37 @@ class WeekStepper extends StatelessWidget {
     DateTime today = DateTime.now();
     int indexToday = today.difference(firstDate).inDays;
 
-    List<Step> steps = List.generate(7, (index) {
-      return Step(
-        title: Text(
-            DateTime(firstDate.year, firstDate.month, firstDate.day + index)
-                .weekday
-                .toString(),
-            style: Theme.of(context).textTheme.labelSmall),
-        content: Container(),
-        isActive: indexToday == index,
-        state: doneLastDays[index] ? StepState.complete : StepState.indexed,
-      );
+    Widget _getStepAvatar(int index) {
+      if (index > indexToday) {
+        return const CircleAvatar(
+          child: Icon(Icons.border_color, color: Colors.white),
+        );
+      }
+      return doneLastDays[index]
+          ? const CircleAvatar(
+              backgroundColor: Colors.green,
+              child: Icon(Icons.check, color: Colors.white),
+            )
+          : const CircleAvatar(
+              backgroundColor: Colors.red,
+              child: Icon(Icons.close_outlined, color: Colors.white),
+            );
+    }
+
+    List<EasyStep> steps = List.generate(7, (index) {
+      return EasyStep(
+          customStep: _getStepAvatar(index),
+          title: getWeekdayNameByNumber(
+              DateTime(firstDate.year, firstDate.month, firstDate.day + index)
+                  .weekday));
     });
 
-    return Container(
-        color: Colors.amber,
-        child: Stepper(
-          steps: steps,
-          type: StepperType.vertical,
-          controlsBuilder: (context, details) => Container(),
-          currentStep: indexToday,
-        ));
+    return EasyStepper(
+      activeStep: indexToday,
+      steps: steps,
+      lineType: LineType.normal,
+      direction: Axis.vertical,
+      showLoadingAnimation: false,
+    );
   }
 }

@@ -11,7 +11,7 @@ class FirestoreHandler extends ChangeNotifier {
   List<Challenge> challenges = [];
   List<ChallengeParticipation> challengeParticipations = [];
   Participant? participant;
-  bool isDoneForToday = false;
+  bool? isDoneForToday;
 
   Future<void> _fetchChallenges() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
@@ -158,12 +158,15 @@ class FirestoreHandler extends ChangeNotifier {
   Challenge? getChallengeForToday() {
     DateTime today = DateTime.now();
     //challenge.activeSince is max 7 days
-    return challenges.firstWhere((element) =>
-        element.activeSince != null &&
-        element.activeSince!.day >= today.day - 7 &&
-        element.activeSince!.day <= today.day &&
-        element.activeSince!.month == today.month &&
-        element.activeSince!.year == today.year);
+    return challenges.cast().firstWhere(
+          (element) =>
+              element.activeSince != null &&
+              element.activeSince!.day >= today.day - 7 &&
+              element.activeSince!.day <= today.day &&
+              element.activeSince!.month == today.month &&
+              element.activeSince!.year == today.year,
+          orElse: () => null,
+        );
   }
 
   bool isChallengeDoneForDate(DateTime day) {
