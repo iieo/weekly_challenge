@@ -1,11 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weekly_challenge/components/button.dart';
+import 'package:weekly_challenge/firebase/firestore_handler.dart';
+import 'package:weekly_challenge/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/homescreen/components/box.dart';
 import 'package:weekly_challenge/homescreen/components/challenge_fab.dart';
+import 'package:weekly_challenge/homescreen/components/week_stepper.dart';
 import 'package:weekly_challenge/main.dart';
+import 'package:weekly_challenge/models/challenges.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Challenge challenge;
+  @override
+  void initState() {
+    super.initState();
+    challenge = Challenge(
+      id: "123",
+      title: "Esse jeden Tag einen Socken",
+      description: "Challenge",
+    );
+  }
+
+  void _done(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Challenge erledigt"),
+      duration: Duration(seconds: 1),
+    ));
+    context.read<FirestoreHandler>().addChallengeParticipation(challenge);
+  }
+
+  void _undoDone(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text("Challenge zurückgezogen"),
+      duration: Duration(seconds: 1),
+    ));
+    context
+        .read<FirestoreHandler>()
+        .deleteChallengeParticipationOnDate(DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +67,10 @@ class HomeScreen extends StatelessWidget {
                       description: "Challenge erledigt?",
                       color: Theme.of(context).colorScheme.primaryContainer,
                       children: [
-                        SizedBox(
-                            height: 70,
-                            child: Button(
-                              icon: const Icon(
-                                Icons.check,
-                                color: Colors.white,
-                                size: 35,
-                              ),
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              onPressed: () {},
-                            ))
+                        AnimatedDoneButton(
+                          onDone: () => _done(context),
+                          onUndo: () => _undoDone(context),
+                        )
                       ],
                     ),
                     const SizedBox(height: 35),
@@ -49,6 +80,7 @@ class HomeScreen extends StatelessWidget {
                       color: Theme.of(context).colorScheme.primaryContainer,
                       children: [
                         //übersicht der Woche
+                        WeekStepper(),
                       ],
                     )
                   ],
