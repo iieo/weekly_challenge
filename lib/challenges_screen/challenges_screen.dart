@@ -16,12 +16,9 @@ class ChallengesScreen extends StatelessWidget {
 
     return Scaffold(
         floatingActionButton: const AddChallengeFloatingButton(),
-        backgroundColor: App.primaryColor,
         appBar: AppBar(
           title:
               Text('Challenges', style: Theme.of(context).textTheme.titleLarge),
-          backgroundColor: App.primaryColor,
-          foregroundColor: App.whiteColor,
         ),
         body: Hero(
             tag: 'challenges',

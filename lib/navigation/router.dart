@@ -10,8 +10,6 @@ import 'package:weekly_challenge/navigation/gorouter_refresh_stream.dart';
 
 final GoRouter router = GoRouter(
   redirect: (context, state) {
-    return null;
-    //eigentlicher code hier nur zum testen auskommentiert
     final bool loggedIn = FirebaseAuth.instance.currentUser != null;
     const loginLocation = "/login";
     final loggingIn = state.subloc == loginLocation;

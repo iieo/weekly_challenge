@@ -11,11 +11,11 @@ class FirestoreHandler extends ChangeNotifier {
   List<Challenge> challenges = [];
   List<ChallengeParticipation> challengeParticipations = [];
   Participant? participant;
+  bool? isDoneForToday;
 
   Future<void> _fetchChallenges() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot =
         await FirebaseFirestore.instance.collection('challenges').get();
-
     challenges = querySnapshot.docs
         .map((e) => Challenge.fromMap(e.id, e.data()))
         .toList();
@@ -81,6 +81,7 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   Future<void> addChallengeParticipation(Challenge challenge) async {
+    await deleteChallengeParticipationOnDate(DateTime.now());
     ChallengeParticipation challengeParticipation = ChallengeParticipation(
       challengeId: challenge.id!,
       pariticipantId: participant!.id,
@@ -117,12 +118,72 @@ class FirestoreHandler extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteChallengeParticipationOnDate(DateTime date) async {
+    //delete in firebase
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('challengeParticipations')
+        .where('pariticipantId', isEqualTo: participant!.id)
+        .where('dateCompleted',
+            isGreaterThanOrEqualTo:
+                Timestamp.fromDate(DateTime(date.year, date.month, date.day)))
+        .where('dateCompleted',
+            isLessThan: Timestamp.fromDate(
+                DateTime(date.year, date.month, date.day + 1)))
+        .get();
+
+    for (var doc in querySnapshot.docs) {
+      await FirebaseFirestore.instance
+          .collection('challengeParticipations')
+          .doc(doc.id)
+          .delete();
+    }
+
+    //delete locally
+    challengeParticipations.removeWhere((element) =>
+        element.dateCompleted.day == date.day &&
+        element.dateCompleted.month == date.month &&
+        element.dateCompleted.year == date.year);
+    notifyListeners();
+  }
+
+  bool isChallengeCompletedForToday() {
+    DateTime today = DateTime.now();
+    return challengeParticipations.any((element) =>
+        element.dateCompleted.day == today.day &&
+        element.dateCompleted.month == today.month &&
+        element.dateCompleted.year == today.year);
+  }
+
+  Challenge? getChallengeForToday() {
+    DateTime today = DateTime.now();
+    //challenge.activeSince is max 7 days
+    return challenges.cast().firstWhere(
+          (element) =>
+              element.activeSince != null &&
+              element.activeSince!.day >= today.day - 7 &&
+              element.activeSince!.day <= today.day &&
+              element.activeSince!.month == today.month &&
+              element.activeSince!.year == today.year,
+          orElse: () => null,
+        );
+  }
+
+  bool isChallengeDoneForDate(DateTime day) {
+    return challengeParticipations.any((element) =>
+        element.dateCompleted.day == day.day &&
+        element.dateCompleted.month == day.month &&
+        element.dateCompleted.year == day.year &&
+        element.pariticipantId == participant!.id);
+  }
+
   ///this method is called once the user has logged in
   void fetchData() async {
     print('fetching data');
-    await _fetchChallenges();
-    await _fetchChallengeParticipations();
     await _fetchParticipant();
+    await _fetchChallengeParticipations();
+    isDoneForToday = isChallengeCompletedForToday();
+    await _fetchChallenges();
     await _fetchParticipantsProfilePicture();
   }
 }
