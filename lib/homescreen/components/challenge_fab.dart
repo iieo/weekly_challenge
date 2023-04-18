@@ -12,7 +12,7 @@ class ChallengeFloatingButton extends StatelessWidget {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         onPressed: () => GoRouter.of(context).go('/challenges'),
-        backgroundColor: App.secondaryColor,
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         label:
             Text("Challenges", style: Theme.of(context).textTheme.labelMedium),
         icon: const Icon(Icons.format_list_bulleted,

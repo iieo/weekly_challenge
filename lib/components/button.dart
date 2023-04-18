@@ -42,7 +42,8 @@ class Button extends StatelessWidget {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             foregroundColor: foregorundColor ?? Colors.black,
-            backgroundColor: backgroundColor ?? App.secondaryColor,
+            backgroundColor:
+                backgroundColor ?? Theme.of(context).colorScheme.secondary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
             ),

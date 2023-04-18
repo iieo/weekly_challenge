@@ -44,7 +44,6 @@ class AddChallengeDialogState extends State<AddChallengeDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        backgroundColor: App.primaryColorBrighter,
         title: const Text("Challenge hinzufügen"),
         content: Form(
             child: Column(
@@ -54,19 +53,19 @@ class AddChallengeDialogState extends State<AddChallengeDialog> {
           children: [
             TextFormField(
                 initialValue: title,
-                decoration: const InputDecoration(
-                    labelStyle: TextStyle(color: App.whiteColor),
-                    hintStyle: TextStyle(color: App.whiteColorDarker),
+                decoration: InputDecoration(
+                    labelStyle: Theme.of(context).textTheme.labelSmall,
+                    hintStyle: Theme.of(context).textTheme.labelMedium,
                     labelText: "Titel",
                     hintText: "z.B. 10km laufen"),
                 onChanged: (value) => setState(() => title = value)),
             TextFormField(
                 initialValue: description,
                 maxLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     labelText: "Beschreibung",
-                    labelStyle: TextStyle(color: App.whiteColor),
-                    hintStyle: TextStyle(color: App.whiteColorDarker),
+                    labelStyle: Theme.of(context).textTheme.labelSmall,
+                    hintStyle: Theme.of(context).textTheme.labelSmall,
                     hintText:
                         "z.B. 10km laufen und dabei 10x anhalten und 10 Liegestütze machen"),
                 onChanged: (value) => setState(() => description = value)),
