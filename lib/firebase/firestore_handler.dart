@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,6 +8,7 @@ import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:weekly_challenge/utils.dart';
 
 class FirestoreHandler extends ChangeNotifier {
   List<Challenge> challenges = [];
@@ -23,6 +26,8 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   Future<void> addChallenge(Challenge challenge) async {
+    challenge.createdBy = FirebaseAuth.instance.currentUser!.uid;
+    challenge.lastUpdatedBy = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance
         .collection('challenges')
         .add(challenge.toMap());
@@ -31,12 +36,15 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   Future<void> updateChallenge(Challenge challenge) async {
+    challenge.lastUpdatedBy = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance
         .collection('challenges')
         .doc(challenge.id)
         .update(challenge.toMap());
+
     challenges =
         challenges.map((e) => e.id == challenge.id ? challenge : e).toList();
+
     notifyListeners();
   }
 
@@ -73,7 +81,8 @@ class FirestoreHandler extends ChangeNotifier {
         'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
     participant?.profilePicture = CachedNetworkImage(
       imageUrl: file.fullPath,
-      placeholder: (context, url) => const CircularProgressIndicator(),
+      placeholder: (context, url) => CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.onPrimary),
     );
     notifyListeners();
   }
@@ -146,7 +155,6 @@ class FirestoreHandler extends ChangeNotifier {
           .delete();
     }
 
-    //delete locally
     challengeParticipations.removeWhere((element) =>
         element.dateCompleted.day == date.day &&
         element.dateCompleted.month == date.month &&
@@ -162,18 +170,25 @@ class FirestoreHandler extends ChangeNotifier {
         element.dateCompleted.year == today.year);
   }
 
-  Challenge? getChallengeForToday() {
+  Challenge? getChallengeForWeek({int weeksSinceNow = 0}) {
+    if (challenges.isEmpty) {
+      return null;
+    }
     DateTime today = DateTime.now();
+    today = today.add(Duration(days: weeksSinceNow * 7));
     //challenge.activeSince is max 7 days
-    return challenges.cast().firstWhere(
-          (element) =>
-              element.activeSince != null &&
-              element.activeSince!.day >= today.day - 7 &&
-              element.activeSince!.day <= today.day &&
-              element.activeSince!.month == today.month &&
-              element.activeSince!.year == today.year,
-          orElse: () => null,
-        );
+    Challenge? challengeToday = challenges.cast().firstWhere(
+      (element) =>
+          element.activeSince != null &&
+          element.activeSince!.day >= today.day - 7 &&
+          element.activeSince!.day <= today.day &&
+          element.activeSince!.month == today.month &&
+          element.activeSince!.year == today.year,
+      orElse: () {
+        return null;
+      },
+    );
+    return challengeToday;
   }
 
   bool isChallengeDoneForDate(DateTime day) {
@@ -184,6 +199,33 @@ class FirestoreHandler extends ChangeNotifier {
         element.pariticipantId == participant!.id);
   }
 
+  void selectChallengeForWeek(int weeksSinceNow) {
+    if (challenges.isEmpty ||
+        getChallengeForWeek(weeksSinceNow: weeksSinceNow) != null) {
+      return;
+    }
+
+    List<Challenge> allChallenges =
+        challenges.where((element) => element.activeSince == null).toList();
+    //sort by amount of likedBy and dislikedBy
+
+    allChallenges.sort((a, b) {
+      return b.likedBy.length -
+          b.dislikedBy.length -
+          (a.likedBy.length - a.dislikedBy.length);
+    });
+
+    //get next monday
+    DateTime nextMonday = getMondayForWeek(weeksSinceNow);
+
+    //set activeSince to next monday
+    Challenge challenge = allChallenges.first;
+    challenge.activeSince = nextMonday;
+    print(
+        'updating challenge: ${challenge.id} with activeSince: $nextMonday for week $weeksSinceNow');
+    updateChallenge(challenge);
+  }
+
   ///this method is called once the user has logged in
   void fetchData() async {
     print('fetching data');
@@ -192,5 +234,8 @@ class FirestoreHandler extends ChangeNotifier {
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();
     await _fetchParticipantsProfilePicture();
+
+    selectChallengeForWeek(0);
+    selectChallengeForWeek(1);
   }
 }

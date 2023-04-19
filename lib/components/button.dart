@@ -40,14 +40,6 @@ class Button extends StatelessWidget {
         width: double.infinity,
         height: 50,
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: foregorundColor ?? Colors.black,
-            backgroundColor:
-                backgroundColor ?? Theme.of(context).colorScheme.secondary,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-            ),
-          ),
           onPressed: onPressed,
           child: _buildChild(),
         ));

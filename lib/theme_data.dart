@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:weekly_challenge/main.dart';
 
 const Color primaryColor = Color.fromARGB(255, 11, 25, 46);
 const Color primaryColorBrighter = Color.fromARGB(255, 24, 43, 69);
@@ -8,8 +7,21 @@ const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
 const Color secondaryColor = Color.fromARGB(255, 12, 201, 171);
 const Color secondaryColorDarker = Color.fromARGB(255, 11, 51, 65);
 
+const ColorScheme colorScheme = ColorScheme(
+  primary: primaryColorBrighter,
+  secondary: secondaryColor,
+  surface: primaryColorBrighter,
+  background: primaryColor,
+  error: Colors.red,
+  onPrimary: whiteColor,
+  onSecondary: whiteColor,
+  onSurface: whiteColor,
+  onBackground: whiteColor,
+  onError: Colors.white,
+  brightness: Brightness.dark,
+);
+
 final ThemeData themeData = ThemeData(
-    //disable toom effect
     pageTransitionsTheme: PageTransitionsTheme(
       builders: <TargetPlatform, PageTransitionsBuilder>{
         TargetPlatform.android: NoPageTransitionBuilder(),
@@ -34,12 +46,23 @@ final ThemeData themeData = ThemeData(
       900: Color(0xff1a1a1a)
     }),
     primaryColor: primaryColor,
-    colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryColor, secondary: secondaryColor),
+    colorScheme: colorScheme,
     appBarTheme: const AppBarTheme(
         backgroundColor: primaryColor, foregroundColor: whiteColor),
     scaffoldBackgroundColor: primaryColor,
     dialogBackgroundColor: primaryColorBrighter,
+    cardColor: primaryColorBrighter,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(secondaryColor),
+        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
+    ),
     textTheme: const TextTheme(
       titleSmall: TextStyle(
         fontSize: 14.0,
