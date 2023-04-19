@@ -12,10 +12,11 @@ class WeekStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     List<bool> doneLastDays = [];
     Challenge? todaysChallenge =
-        context.watch<FirestoreHandler>().getChallengeForToday();
+        context.watch<FirestoreHandler>().getChallengeForWeek();
 
     if (todaysChallenge == null) {
-      return const CircularProgressIndicator();
+      return CircularProgressIndicator(
+          color: Theme.of(context).colorScheme.onPrimary);
     }
     DateTime firstDate = todaysChallenge.activeSince!;
     for (int i = 0; i < 7; i++) {
@@ -26,7 +27,7 @@ class WeekStepper extends StatelessWidget {
     DateTime today = DateTime.now();
     int indexToday = today.difference(firstDate).inDays;
 
-    Widget _getStepAvatar(int index) {
+    Widget getStepAvatar(int index) {
       if (index > indexToday) {
         return const CircleAvatar(
           child: Icon(Icons.border_color, color: Colors.white),
@@ -45,7 +46,7 @@ class WeekStepper extends StatelessWidget {
 
     List<EasyStep> steps = List.generate(7, (index) {
       return EasyStep(
-          customStep: _getStepAvatar(index),
+          customStep: getStepAvatar(index),
           title: getWeekdayNameByNumber(
               DateTime(firstDate.year, firstDate.month, firstDate.day + index)
                   .weekday));
@@ -60,7 +61,6 @@ class WeekStepper extends StatelessWidget {
       defaultLineColor: Theme.of(context).colorScheme.onPrimary,
       lineDotRadius: 2,
       borderThickness: 0,
-      
     );
   }
 }

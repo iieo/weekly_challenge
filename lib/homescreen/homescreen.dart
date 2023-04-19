@@ -17,23 +17,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Challenge challenge;
   @override
   void initState() {
     super.initState();
-    challenge = Challenge(
-      id: "123",
-      title: "Esse jeden Tag einen Socken",
-      description: "Challenge",
-    );
   }
 
   void _done(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text("Challenge erledigt"),
-      duration: Duration(seconds: 1),
+    Challenge? challengeThisWeek =
+        context.read<FirestoreHandler>().getChallengeForWeek();
+    String scaffoldMessage = "Challenge erledigt";
+    if (challengeThisWeek == null) {
+      scaffoldMessage =
+          "Keine Challenge für diese Woche. Probier es später nochmal.";
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(scaffoldMessage),
+      duration: const Duration(seconds: 1),
     ));
-    context.read<FirestoreHandler>().addChallengeParticipation(challenge);
+    if (challengeThisWeek != null) {
+      context
+          .read<FirestoreHandler>()
+          .addChallengeParticipation(challengeThisWeek);
+    }
   }
 
   void _undoDone(BuildContext context) {
@@ -48,38 +53,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Challenge? challengeThisWeek =
+        context.watch<FirestoreHandler>().getChallengeForWeek();
+    Challenge? challengeNextWeek =
+        context.watch<FirestoreHandler>().getChallengeForWeek(weeksSinceNow: 1);
+
     return Scaffold(
         floatingActionButton: const ChallengeFloatingButton(),
         body: SizedBox.expand(
             child: FractionallySizedBox(
                 widthFactor: 0.8,
-                child: ListView(
-                  children: [
-                    const Box(
-                      headline: "Esse jeden Tag einen Socken",
-                      description: "Challenge",
-                      children: [],
-                    ),
-                    const SizedBox(height: 35),
-                    Box(
-                      headline: "Heute",
-                      description: "Challenge erledigt?",
+                child: Container(
+                    padding: App.defaultPadding,
+                    child: ListView(
                       children: [
-                        AnimatedDoneButton(
-                          onDone: () => _done(context),
-                          onUndo: () => _undoDone(context),
+                        Box(
+                          headline:
+                              challengeThisWeek?.title ?? "Challenge loading...",
+                          description: challengeThisWeek?.description ??
+                              "Description loading...",
+                          children: [
+                            Visibility(
+                                visible: challengeThisWeek == null,
+                                child: CircularProgressIndicator(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary))
+                          ],
+                        ),
+                        const SizedBox(height: 35),
+                        Box(
+                          headline: "Heute",
+                          description: "Challenge erledigt?",
+                          children: [
+                            AnimatedDoneButton(
+                              onDone: () => _done(context),
+                              onUndo: () => _undoDone(context),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 35),
+                        const Box(
+                          headline: "Deine Erfolg",
+                          description: "Aktuelle Woche",
+                          children: [
+                            WeekStepper(),
+                          ],
+                        ),
+                        const SizedBox(height: 35),
+                        Box(
+                          headline: "Nächste Challenge",
+                          description: challengeNextWeek?.title ?? "Loading...",
                         )
                       ],
-                    ),
-                    const SizedBox(height: 35),
-                    const Box(
-                      headline: "Deine Erfolg",
-                      description: "Aktuelle Woche",
-                      children: [
-                        WeekStepper(),
-                      ],
-                    )
-                  ],
-                ))));
+                    )))));
   }
 }
