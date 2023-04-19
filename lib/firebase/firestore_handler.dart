@@ -50,11 +50,17 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   Future<void> _fetchParticipant() async {
+    if (FirebaseAuth.instance.currentUser == null) return;
+
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
         await FirebaseFirestore.instance
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
+
+    if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+      return;
+    }
 
     participant =
         Participant.fromMap(documentSnapshot.id, documentSnapshot.data()!);
@@ -62,6 +68,7 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   Future<void> _fetchParticipantsProfilePicture() async {
+    if (FirebaseAuth.instance.currentUser == null) return;
     final file = FirebaseStorage.instance.ref().child(
         'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
     participant?.profilePicture = CachedNetworkImage(

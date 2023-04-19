@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weekly_challenge/components/dialog.dart';
 
 import '../firebase/firebase_auth_handler.dart';
 import 'authentication.dart';
@@ -21,8 +22,26 @@ class _SignUpContainer extends State<SignUpContainer> {
   final passwordValidator = GlobalKey<FormState>();
 
   bool loading = false;
-  bool passwordsMatch = false;
+  bool passwordsMatch = true;
   String infoText = '';
+
+  void showError(String message) {
+    showSimpleErrorDialog(context, message);
+  }
+
+  void checkPasswordEquality(String value) {
+    if (passwordController.text.compareTo(checkPasswordController.text) == 0) {
+      setState(() {
+        infoText = "";
+      });
+      passwordsMatch = true;
+    } else {
+      setState(() {
+        infoText = "Passwords don't match";
+      });
+      passwordsMatch = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +56,7 @@ class _SignUpContainer extends State<SignUpContainer> {
                 child: TextFormField(
                   key: passwordValidator,
                   controller: emailController,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   decoration: const InputDecoration(
                       hoverColor: Colors.black,
                       border: OutlineInputBorder(),
@@ -50,7 +70,9 @@ class _SignUpContainer extends State<SignUpContainer> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: passwordController,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   obscureText: true,
+                  onChanged: checkPasswordEquality,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
@@ -64,19 +86,8 @@ class _SignUpContainer extends State<SignUpContainer> {
                 child: TextField(
                   controller: checkPasswordController,
                   obscureText: true,
-                  onChanged: (value) {
-                    if (value != passwordController.text) {
-                      setState(() {
-                        infoText = "Passwords don't match";
-                      });
-                      passwordsMatch = false;
-                    } else {
-                      passwordsMatch = true;
-                      setState(() {
-                        infoText = "";
-                      });
-                    }
-                  },
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  onChanged: checkPasswordEquality,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Repeat Password',
@@ -91,51 +102,26 @@ class _SignUpContainer extends State<SignUpContainer> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (!passwordsMatch) {
+                        showSimpleErrorDialog(
+                            context, "Passwords don't match!");
                         return;
                       }
                       setState(() {
                         loading = true;
                       });
-                      FirebaseAuthHandler.trySignup("dummyAccount",
+                      FirebaseAuthHandler.trySignup(emailController.text,
                               emailController.text, passwordController.text)
-                          .then((value) {
-                        setState(() {
-                          loading = false;
-                          infoText = "";
-                        });
-
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text(
-                                    "Account was created successfully!"),
-                                content: const Text("Press Ok to login."),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      GoRouter.of(context).go("/login");
-                                    },
-                                    child: const Text("Ok"),
-                                  )
-                                ],
-                              );
-                            });
-                      }).timeout(const Duration(seconds: 5), onTimeout: () {
-                        setState(() {
-                          loading = false;
-                          infoText = "Connection timed out.";
-                        });
-                      }).onError((error, stackTrace) {
+                          .onError((error, stackTrace) {
                         if (error is FirebaseAuthException) {
+                          showSimpleErrorDialog(context,
+                              FirebaseAuthHandler.getFirebaseErrorText(error));
                           setState(() {
-                            infoText =
-                                FirebaseAuthHandler.getFirebaseErrorText(error);
                             loading = false;
                           });
                         } else {
                           setState(() {
-                            infoText = "Unknown error occured.";
+                            showSimpleErrorDialog(
+                                context, 'Unknown error occured.');
                             loading = false;
                           });
                         }
@@ -149,8 +135,8 @@ class _SignUpContainer extends State<SignUpContainer> {
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
-                      child: const Text("Have an account? Log in.",
-                          style: TextStyle(color: Colors.blue)),
+                      child: Text("Have an account? Log in.",
+                          style: Theme.of(context).textTheme.titleSmall),
                       onTap: () {
                         GoRouter.of(context).go("/login");
                       }))),
@@ -161,7 +147,7 @@ class _SignUpContainer extends State<SignUpContainer> {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     infoText,
-                    style: const TextStyle(color: Colors.red),
+                    style: Theme.of(context).textTheme.bodySmall,
                     textAlign: TextAlign.center,
                   )))
         ],

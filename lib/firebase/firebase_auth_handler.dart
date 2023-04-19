@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
+
+class EmailNotVerifiedException implements Exception {}
 
 class FirebaseAuthHandler {
   static String getFirebaseErrorText(FirebaseAuthException e) {
@@ -15,21 +18,47 @@ class FirebaseAuthHandler {
         return 'Email already exists or is invalid';
       case 'weak-password':
         return 'Password is too weak';
+      case 'email-not-verified':
+        return 'Email not verified. Please check your inbox.';
+      case 'missing-email':
+        return 'Please enter an email';
+      case 'timeout':
+        return 'The request timed out. Please try again.';
       default:
         return e.code;
     }
   }
 
+  static Future resendVerificationEmail() async {
+    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+  }
+
   static Future<void> tryLogin(String email, String password) async {
     await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password);
-    await FirebaseAuth.instance.currentUser!.reload();
+        .signInWithEmailAndPassword(email: email, password: password)
+        .timeout(Duration(seconds: 15),
+            onTimeout: () => throw FirebaseAuthException(code: "timeout"));
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      await FirebaseAuth.instance.currentUser!.reload();
+    }
+
+    if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+      throw EmailNotVerifiedException();
+    }
   }
 
   static Future<void> trySignup(
       String name, String email, String password) async {
     UserCredential credentials = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: password);
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .timeout(Duration(seconds: 15),
+            onTimeout: () => throw FirebaseAuthException(code: "timeout"));
+
+    if (credentials.user == null) {
+      return;
+    }
+
     await credentials.user!.sendEmailVerification();
     await credentials.user!.updateDisplayName(name);
     await FirebaseFirestore.instance
@@ -40,11 +69,20 @@ class FirebaseAuthHandler {
   }
 
   static Future<void> forgotPassword(String email) async {
-    await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    await FirebaseAuth.instance.sendPasswordResetEmail(email: email).timeout(
+        Duration(seconds: 15),
+        onTimeout: () => throw FirebaseAuthException(code: "timeout"));
   }
 
   static Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  static Future<void> tryReload() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return;
+    }
+    await FirebaseAuth.instance.currentUser!.reload();
   }
 
   static Future<void> deleteAccount() async {

@@ -32,32 +32,33 @@ class _AuthScreen extends State<AuthScreen> {
     return Scaffold(
         body: Container(
             alignment: Alignment.center,
-            child: Material(
-                child: Container(
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            color: App.whiteColor,
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                        color: App.primaryColor,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)),
-                    width: widget.width,
-                    height: widget.height,
-                    child: Stack(alignment: Alignment.center, children: [
-                      widget.child,
-                      Builder(builder: (context) {
-                        if (showLoading) {
-                          return const LoadingScreen();
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      })
-                    ])))));
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).colorScheme.shadow,
+                        spreadRadius: 7,
+                        blurRadius: 7,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                    color: Theme.of(context).colorScheme.background,
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.outline)),
+                width: widget.width,
+                height: widget.height,
+                child: Stack(alignment: Alignment.center, children: [
+                  widget.child,
+                  Builder(builder: (context) {
+                    if (showLoading) {
+                      return const LoadingScreen();
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  })
+                ]))));
   }
 }
 

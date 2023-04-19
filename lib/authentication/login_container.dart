@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weekly_challenge/components/button.dart';
+import 'package:weekly_challenge/components/dialog.dart';
 
 import '../firebase/firebase_auth_handler.dart';
 import 'authentication.dart';
@@ -19,8 +21,27 @@ class _LoginContainer extends State<LoginContainer> {
   final emailController = TextEditingController();
   final passwordValidator = GlobalKey<FormState>();
 
-  String infoText = '';
   bool loading = false;
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
+  void onEmailVerified(BuildContext context) {
+    GoRouter.of(context).go('/');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      emailController.text = FirebaseAuth.instance.currentUser!.email!;
+    }
+  }
 
   void UpdateLoading(bool isLoading) {
     setState(() {
@@ -28,10 +49,36 @@ class _LoginContainer extends State<LoginContainer> {
     });
   }
 
-  void UpdateInfoText(String text) {
-    setState(() {
-      infoText = text;
-    });
+  Future<bool> ShowEmailNotVerifiedDialog(BuildContext context) async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return false;
+    }
+
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Email not verified"),
+            content: Text(
+                'Please verify your email before logging in. Email was sent to ${FirebaseAuth.instance.currentUser!.email}'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Dismiss",
+                      style: Theme.of(context).textTheme.labelMedium)),
+              TextButton(
+                  onPressed: () {
+                    FirebaseAuthHandler.resendVerificationEmail();
+                  },
+                  child: Text("Send again",
+                      style: Theme.of(context).textTheme.labelMedium))
+            ],
+          );
+        });
+
+    return true;
   }
 
   @override
@@ -47,6 +94,7 @@ class _LoginContainer extends State<LoginContainer> {
                 child: TextFormField(
                   key: passwordValidator,
                   controller: emailController,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   decoration: const InputDecoration(
                       hoverColor: Colors.black,
                       border: OutlineInputBorder(),
@@ -59,6 +107,7 @@ class _LoginContainer extends State<LoginContainer> {
               child: Padding(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   controller: passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(
@@ -75,23 +124,27 @@ class _LoginContainer extends State<LoginContainer> {
                   child: ElevatedButton(
                     onPressed: () {
                       UpdateLoading(true);
+                      FirebaseAuthHandler.tryReload();
                       FirebaseAuthHandler.tryLogin(
                               emailController.text, passwordController.text)
                           .then((value) {
-                        UpdateInfoText('Login successful.');
-                        UpdateLoading(false);
-                        context.go('/');
-                      }).timeout(const Duration(seconds: 5), onTimeout: () {
-                        UpdateInfoText("Connection timed out.");
-                        UpdateLoading(false);
-                      }).onError((error, stackTrace) {
-                        if (error is FirebaseAuthException) {
-                          UpdateInfoText(
-                              FirebaseAuthHandler.getFirebaseErrorText(error));
+                        FirebaseAuth.instance.currentUser!.reload();
+                        if (FirebaseAuth.instance.currentUser!.emailVerified) {
+                          GoRouter.of(context).go('/');
                         } else {
-                          UpdateInfoText("Unkown Error.");
+                          ShowEmailNotVerifiedDialog(context);
                         }
                         UpdateLoading(false);
+                      }).onError((error, stackTrace) {
+                        UpdateLoading(false);
+                        if (error is FirebaseAuthException) {
+                          showSimpleErrorDialog(context,
+                              FirebaseAuthHandler.getFirebaseErrorText(error));
+                        } else if (error is EmailNotVerifiedException) {
+                          ShowEmailNotVerifiedDialog(context);
+                        } else {
+                          showSimpleErrorDialog(context, "Unkown Error.");
+                        }
                       });
                     },
                     child: const Text('Login'),
@@ -105,14 +158,13 @@ class _LoginContainer extends State<LoginContainer> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         InkWell(
-                            child: const Text("Forgot Password?",
-                                style: TextStyle(color: Colors.blue)),
+                            child: Text("Forgot Password?",
+                                style: Theme.of(context).textTheme.titleSmall),
                             onTap: () {
                               UpdateLoading(true);
                               FirebaseAuthHandler.forgotPassword(
                                       emailController.text)
                                   .then((value) {
-                                UpdateInfoText('Password reset email sent.');
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -131,38 +183,27 @@ class _LoginContainer extends State<LoginContainer> {
                                       );
                                     });
                                 UpdateLoading(false);
-                              }).timeout(const Duration(seconds: 5),
-                                      onTimeout: () {
-                                UpdateInfoText("Connection timed out.");
-                                UpdateLoading(false);
                               }).onError((error, stackTrace) {
+                                UpdateLoading(false);
                                 if (error is FirebaseAuthException) {
-                                  UpdateInfoText(
+                                  showSimpleErrorDialog(
+                                      context,
                                       FirebaseAuthHandler.getFirebaseErrorText(
                                           error));
                                 } else {
-                                  UpdateInfoText("Unkown Error.");
+                                  showSimpleErrorDialog(
+                                      context, "Unkown Error.");
                                 }
-                                UpdateLoading(false);
                               });
                             }),
                         InkWell(
-                            child: const Text("Create User Account.",
-                                style: TextStyle(color: Colors.blue)),
+                            child: Text("Create User Account.",
+                                style: Theme.of(context).textTheme.titleSmall),
                             onTap: () {
+                              FirebaseAuthHandler.logout();
                               GoRouter.of(context).go("/signup");
                             })
                       ]))),
-          SizedBox(
-              width: loginWidth,
-              height: 40,
-              child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    infoText,
-                    style: const TextStyle(color: Colors.red),
-                    textAlign: TextAlign.center,
-                  )))
         ],
       ),
       Builder(builder: (context) {

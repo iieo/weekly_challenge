@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/components/button.dart';
+import 'package:weekly_challenge/firebase/firebase_auth_handler.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/homescreen/components/box.dart';
 import 'package:weekly_challenge/homescreen/components/challenge_fab.dart';
 import 'package:weekly_challenge/homescreen/components/week_stepper.dart';
-import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 widthFactor: 0.8,
                 child: ListView(
                   children: [
+                    const SizedBox(height: 35),
                     Box(
                       headline: "Esse jeden Tag einen Socken",
                       description: "Challenge",
@@ -78,11 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       headline: "Deine Erfolg",
                       description: "Aktuelle Woche",
                       color: Theme.of(context).colorScheme.primaryContainer,
-                      children: [
+                      children: const [
                         //übersicht der Woche
                         WeekStepper(),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 35),
+                    const Button(
+                        onPressed: FirebaseAuthHandler.logout, text: "Logout"),
+                    const SizedBox(height: 35)
                   ],
                 ))));
   }
