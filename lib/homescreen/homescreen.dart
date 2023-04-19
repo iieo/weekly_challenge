@@ -64,53 +64,49 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FractionallySizedBox(
                 widthFactor: 0.8,
                 child: Container(
-                    padding: App.defaultPadding,
                     child: ListView(
+                  children: [
+                    Box(
+                      headline:
+                          challengeThisWeek?.title ?? "Challenge loading...",
+                      description: challengeThisWeek?.description ??
+                          "Description loading...",
                       children: [
-                        Box(
-                          headline: challengeThisWeek?.title ??
-                              "Challenge loading...",
-                          description: challengeThisWeek?.description ??
-                              "Description loading...",
-                          children: [
-                            Visibility(
-                                visible: challengeThisWeek == null,
-                                child: CircularProgressIndicator(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary))
-                          ],
-                        ),
-                        const SizedBox(height: 35),
-                        Box(
-                          headline: "Heute",
-                          description: "Challenge erledigt?",
-                          children: [
-                            AnimatedDoneButton(
-                              onDone: () => _done(context),
-                              onUndo: () => _undoDone(context),
-                            )
-                          ],
-                        ),
-                        const SizedBox(height: 35),
-                        const Box(
-                          headline: "Deine Erfolg",
-                          description: "Aktuelle Woche",
-                          children: [
-                            WeekStepper(),
-                          ],
-                        ),
-                        const SizedBox(height: 35),
-                        Box(
-                          headline: "Nächste Challenge",
-                          description: challengeNextWeek?.title ?? "Loading...",
-                        ),
-                        const SizedBox(height: 35),
-                        const Button(
-                            onPressed: FirebaseAuthHandler.logout,
-                            text: "Logout"),
-                        const SizedBox(height: 35)
+                        Visibility(
+                            visible: challengeThisWeek == null,
+                            child: CircularProgressIndicator(
+                                color: Theme.of(context).colorScheme.onPrimary))
                       ],
-                    )))));
+                    ),
+                    const SizedBox(height: 35),
+                    Box(
+                      headline: "Heute",
+                      description: "Challenge erledigt?",
+                      children: [
+                        AnimatedDoneButton(
+                          onDone: () => _done(context),
+                          onUndo: () => _undoDone(context),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 35),
+                    const Box(
+                      headline: "Deine Erfolg",
+                      description: "Aktuelle Woche",
+                      children: [
+                        WeekStepper(),
+                      ],
+                    ),
+                    const SizedBox(height: 35),
+                    Box(
+                      headline: "Nächste Challenge",
+                      description: challengeNextWeek?.title ?? "Loading...",
+                    ),
+                    const SizedBox(height: 35),
+                    const Button(
+                        onPressed: FirebaseAuthHandler.logout, text: "Logout"),
+                    const SizedBox(height: 35)
+                  ],
+                )))));
   }
 }
