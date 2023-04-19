@@ -100,6 +100,11 @@ final ThemeData themeData = ThemeData(
         decoration: TextDecoration.none,
         color: Colors.white,
       ),
+      bodyMedium: TextStyle(
+          fontSize: 18.0,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.none,
+          color: Colors.black),
     ));
 
 class NoPageTransitionBuilder extends PageTransitionsBuilder {

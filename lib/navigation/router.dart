@@ -10,11 +10,16 @@ import 'package:weekly_challenge/navigation/gorouter_refresh_stream.dart';
 
 final GoRouter router = GoRouter(
   redirect: (context, state) {
-    final bool loggedIn = FirebaseAuth.instance.currentUser != null;
-    const loginLocation = "/login";
-    final loggingIn = state.subloc == loginLocation;
+    bool loggedIn = FirebaseAuth.instance.currentUser != null;
+    bool emailVerified = false;
+    if (loggedIn) {
+      emailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    }
 
+    const loginLocation = "/login";
     const homeLocation = "/";
+
+    final loggingIn = state.subloc == loginLocation;
 
     if (!loggedIn) {
       if (state.subloc == "/signup") {
@@ -23,7 +28,16 @@ final GoRouter router = GoRouter(
       return loginLocation;
     }
 
+    if (loggedIn && !emailVerified) {
+      if (state.subloc == loginLocation) {
+        return null;
+      }
+      print("is here");
+      return loginLocation;
+    }
+
     if (loggingIn) {
+      print("login");
       state.queryParams['from'];
       return state.queryParams['from'] ?? homeLocation;
     }
