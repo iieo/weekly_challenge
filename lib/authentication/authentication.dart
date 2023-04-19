@@ -70,6 +70,8 @@ class LoadingScreen extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
         child: Container(
             color: Colors.white.withOpacity(0.5),
-            child: const Center(child: CircularProgressIndicator())));
+            child: Center(
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary))));
   }
 }

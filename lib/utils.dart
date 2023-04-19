@@ -77,6 +77,17 @@ DateTime? parseDateTime(dynamic value) {
   }
 }
 
+DateTime getMondayForWeek(int weeksSinceNow) {
+  DateTime nextMonday = DateTime.now();
+  nextMonday = DateTime(nextMonday.year, nextMonday.month, nextMonday.day);
+
+  while (nextMonday.weekday != 1) {
+    nextMonday = nextMonday.subtract(const Duration(days: 1));
+  }
+  nextMonday = nextMonday.add(Duration(days: 7 * weeksSinceNow));
+  return nextMonday;
+}
+
 String getWeekdayNameByNumber(int weekday) {
   switch (weekday) {
     case 1:

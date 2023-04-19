@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/challenges_screen/components/add_challenge_dialog.dart';
@@ -11,6 +12,7 @@ class ChallengeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String firebaseId = FirebaseAuth.instance.currentUser!.uid;
     return Card(
         child: ListTile(
             title: Text(challenge.title,
@@ -25,6 +27,28 @@ class ChallengeCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  IconButton(
+                      onPressed: () {
+                        challenge.likedBy.add(firebaseId);
+                        context
+                            .read<FirestoreHandler>()
+                            .updateChallenge(challenge);
+                      },
+                      icon: Icon(Icons.thumb_up,
+                          color: challenge.likedBy.contains(firebaseId)
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.onPrimary)),
+                  IconButton(
+                      onPressed: () {
+                        challenge.dislikedBy.add(firebaseId);
+                        context
+                            .read<FirestoreHandler>()
+                            .updateChallenge(challenge);
+                      },
+                      icon: Icon(Icons.thumb_down,
+                          color: challenge.dislikedBy.contains(firebaseId)
+                              ? Theme.of(context).colorScheme.secondary
+                              : Theme.of(context).colorScheme.onPrimary)),
                   IconButton(
                       onPressed: () => showDialog(
                           context: context,
