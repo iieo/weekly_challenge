@@ -1,25 +1,56 @@
 import 'package:flutter/material.dart';
 
-const Color primaryColor = Color.fromARGB(255, 11, 25, 46);
+const Color backgroundDark = Color.fromARGB(255, 11, 25, 46);
+const Color backgroundDarkBrighter = Color.fromARGB(255, 24, 43, 69);
+
+const Color primaryColor = Color.fromARGB(255, 12, 201, 169);
 const Color primaryColorBrighter = Color.fromARGB(255, 24, 43, 69);
-const Color whiteColor = Color.fromARGB(255, 205, 215, 245);
-const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
+
 const Color secondaryColor = Color.fromARGB(255, 12, 201, 171);
 const Color secondaryColorDarker = Color.fromARGB(255, 11, 51, 65);
 
-const ColorScheme colorScheme = ColorScheme(
-  primary: primaryColorBrighter,
-  secondary: secondaryColor,
-  surface: primaryColorBrighter,
-  background: primaryColor,
-  error: Colors.red,
-  onPrimary: whiteColor,
-  onSecondary: whiteColor,
-  onSurface: whiteColor,
-  onBackground: whiteColor,
-  onError: Colors.white,
+const Color whiteColor = Color.fromARGB(255, 205, 215, 245);
+const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
+
+ColorScheme colorScheme = ColorScheme.fromSeed(
+  seedColor: primaryColorBrighter,
   brightness: Brightness.dark,
+  //primary: primaryColorBrighter,
+  secondary: secondaryColor,
+  //surface: primaryColorBrighter,
+  background: backgroundDark,
+  error: Colors.red,
+  //onPrimary: whiteColor,
+  //onSecondary: whiteColor,
+  //onSurface: whiteColor,
+  //onBackground: whiteColor,
+  //onError: Colors.white,
 );
+
+/*const Color backgroundDark = Color.fromARGB(255, 20, 36, 62);
+const Color backgroundDarkBrighter = Color.fromARGB(255, 35, 63, 108);
+
+const Color primaryColor = Color.fromARGB(255, 39, 103, 68);
+const Color primaryColorBrighter = Color.fromARGB(255, 61, 164, 109);
+
+const Color secondaryColor = Color.fromARGB(255, 141, 93, 208);
+const Color secondaryColorDarker = Color.fromARGB(255, 121, 65, 200);
+
+const Color ternaryColor = Color.fromARGB(255, 50, 62, 153);
+const Color ternaryColorDarker = Color.fromARGB(255, 40, 50, 123);
+
+const Color fourthColor = Color.fromARGB(255, 24, 62, 75);
+const Color fourthColorDarker = Color.fromARGB(255, 20, 51, 62);
+
+const Color whiteColor = Color.fromARGB(255, 205, 215, 245);
+const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
+
+ColorScheme colorScheme = ColorScheme.fromSeed(
+    seedColor: primaryColor,
+    secondary: secondaryColor,
+    tertiary: ternaryColor,
+    brightness: Brightness.dark,
+    background: fourthColor);*/
 
 final ThemeData themeData = ThemeData(
     pageTransitionsTheme: PageTransitionsTheme(
@@ -49,9 +80,9 @@ final ThemeData themeData = ThemeData(
     colorScheme: colorScheme,
     appBarTheme: const AppBarTheme(
         backgroundColor: primaryColor, foregroundColor: whiteColor),
-    scaffoldBackgroundColor: primaryColor,
-    dialogBackgroundColor: primaryColorBrighter,
-    cardColor: primaryColorBrighter,
+    scaffoldBackgroundColor: backgroundDark,
+    //dialogBackgroundColor: primaryColorBrighter,
+    //cardColor: primaryColorBrighter,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(secondaryColor),
@@ -102,9 +133,9 @@ final ThemeData themeData = ThemeData(
       ),
       bodyMedium: TextStyle(
           fontSize: 18.0,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.normal,
           decoration: TextDecoration.none,
-          color: Colors.black),
+          color: whiteColorDarker),
     ));
 
 class NoPageTransitionBuilder extends PageTransitionsBuilder {

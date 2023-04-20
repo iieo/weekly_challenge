@@ -19,7 +19,14 @@ class Box extends StatelessWidget {
         padding: App.defaultPadding,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primaryContainer,
+          /*gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Theme.of(context).colorScheme.primaryContainer,
+                  Theme.of(context).colorScheme.primary
+                ])*/
         ),
         child: Row(
             mainAxisSize: MainAxisSize.min,

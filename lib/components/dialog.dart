@@ -15,11 +15,11 @@ void showSimpleDialog(BuildContext context, String title, String errorMsg) {
           content: Text(errorMsg),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Dismiss"),
-            ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text("Dismiss",
+                    style: Theme.of(context).textTheme.labelMedium)),
           ],
         );
       });
