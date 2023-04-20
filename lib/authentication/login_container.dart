@@ -136,6 +136,8 @@ class _LoginContainer extends State<LoginContainer> {
                         }
                         UpdateLoading(false);
                       }).onError((error, stackTrace) {
+                        print(error);
+                        print(stackTrace);
                         UpdateLoading(false);
                         if (error is FirebaseAuthException) {
                           showSimpleErrorDialog(context,

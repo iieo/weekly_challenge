@@ -33,20 +33,29 @@ class _AuthScreen extends State<AuthScreen> {
         body: Container(
             alignment: Alignment.center,
             child: Container(
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Theme.of(context).colorScheme.shadow,
-                        spreadRadius: 7,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                    color: Theme.of(context).colorScheme.background,
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.outline)),
+                  borderRadius: BorderRadius.circular(10),
+                  /*gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.secondaryContainer
+                      ]),*/
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.shadow,
+                      spreadRadius: 3,
+                      blurRadius: 7,
+                      offset: const Offset(0, 2), // changes position of shadow
+                    ),
+                  ],
+                ),
+                //color: Theme.of(context).colorScheme.background,
+                /*border: Border.all(
+                        color: Theme.of(context).colorScheme.outline)),*/
                 width: widget.width,
                 height: widget.height,
                 child: Stack(alignment: Alignment.center, children: [
