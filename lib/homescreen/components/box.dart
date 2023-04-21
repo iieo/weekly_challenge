@@ -25,7 +25,7 @@ class Box extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [
                   Theme.of(context).colorScheme.primaryContainer,
-                  Theme.of(context).colorScheme.primary
+                  Theme.of(context).colorScheme.primaryContainer
                 ])*/
         ),
         child: Row(
@@ -50,8 +50,8 @@ class Box extends StatelessWidget {
                       : const SizedBox.shrink(),
                   const SizedBox(height: 35),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: children ?? [],
                   )
                 ],

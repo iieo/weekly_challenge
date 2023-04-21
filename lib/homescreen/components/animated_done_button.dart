@@ -30,7 +30,6 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
-      value: 0.0,
     );
     _shrinkAnimation = Tween(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
@@ -67,7 +66,7 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
       return const CircularProgressIndicator();
     }
     if (isDoneForToday && isLoading) {
-      _controller.value = 1.0;
+      _controller.value = 1;
       isLoading = false;
     }
 
@@ -83,8 +82,8 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
                 child: Lottie.asset(
                   'assets/animations/done.json',
                   repeat: false,
-                  fit: BoxFit.fill,
                   controller: _controller,
+                  
                   onLoaded: (composition) {
                     _controller.duration = composition.duration;
                     _controller.reverseDuration = Duration(

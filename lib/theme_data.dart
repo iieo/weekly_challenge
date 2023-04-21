@@ -81,8 +81,8 @@ final ThemeData themeData = ThemeData(
     appBarTheme: const AppBarTheme(
         backgroundColor: primaryColor, foregroundColor: whiteColor),
     scaffoldBackgroundColor: backgroundDark,
-    //dialogBackgroundColor: primaryColorBrighter,
-    //cardColor: primaryColorBrighter,
+    dialogBackgroundColor: primaryColorBrighter,
+    cardColor: primaryColorBrighter,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all<Color>(secondaryColor),
