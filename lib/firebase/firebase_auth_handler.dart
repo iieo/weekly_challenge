@@ -78,13 +78,6 @@ class FirebaseAuthHandler {
     await FirebaseAuth.instance.signOut();
   }
 
-  static Future<void> tryReload() async {
-    if (FirebaseAuth.instance.currentUser == null) {
-      return;
-    }
-    await FirebaseAuth.instance.currentUser!.reload();
-  }
-
   static Future<void> deleteAccount() async {
     await FirebaseAuth.instance.currentUser!.delete();
   }

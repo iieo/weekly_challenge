@@ -67,13 +67,13 @@ class _LoginContainer extends State<LoginContainer> {
                     Navigator.pop(context);
                   },
                   child: Text("Dismiss",
-                      style: Theme.of(context).textTheme.labelMedium)),
+                      style: Theme.of(context).textTheme.labelSmall)),
               TextButton(
                   onPressed: () {
                     FirebaseAuthHandler.resendVerificationEmail();
                   },
                   child: Text("Send again",
-                      style: Theme.of(context).textTheme.labelMedium))
+                      style: Theme.of(context).textTheme.labelSmall))
             ],
           );
         });
@@ -124,20 +124,15 @@ class _LoginContainer extends State<LoginContainer> {
                   child: ElevatedButton(
                     onPressed: () {
                       UpdateLoading(true);
-                      FirebaseAuthHandler.tryReload();
                       FirebaseAuthHandler.tryLogin(
                               emailController.text, passwordController.text)
                           .then((value) {
                         FirebaseAuth.instance.currentUser!.reload();
-                        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                          GoRouter.of(context).go('/');
-                        } else {
+                        if (!FirebaseAuth.instance.currentUser!.emailVerified) {
                           ShowEmailNotVerifiedDialog(context);
                         }
                         UpdateLoading(false);
                       }).onError((error, stackTrace) {
-                        print(error);
-                        print(stackTrace);
                         UpdateLoading(false);
                         if (error is FirebaseAuthException) {
                           showSimpleErrorDialog(context,

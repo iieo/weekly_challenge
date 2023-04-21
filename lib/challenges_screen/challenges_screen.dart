@@ -38,42 +38,44 @@ class _ChallengesScreenState extends State<ChallengesScreen>
     final List<Challenge> challengesNotCompleted =
         challenges.where((element) => !element.isCompleted).toList();
 
-    return Scaffold(
-        floatingActionButton: const AddChallengeFloatingButton(),
-        appBar: AppBar(
-          title:
-              Text('Challenges', style: Theme.of(context).textTheme.titleLarge),
-        ),
-        body: Hero(
-            tag: 'challenges',
-            child: Container(
-                padding: App.defaultPadding,
-                child: Column(children: [
-                  TabBar(
-                    controller: _tabController,
-                    tabs: const [
-                      Tab(text: 'Challenges'),
-                      Tab(text: 'Completed'),
-                    ],
-                  ),
-                  Expanded(
-                      child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      ListView.builder(
-                          itemCount: challengesNotCompleted.length,
-                          itemBuilder: (context, index) {
-                            return ChallengeCard(
-                                challenge: challengesNotCompleted[index]);
-                          }),
-                      ListView.builder(
-                          itemCount: challengesCompleted.length,
-                          itemBuilder: (context, index) {
-                            return ChallengeCard(
-                                challenge: challengesCompleted[index]);
-                          }),
-                    ],
-                  ))
-                ]))));
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+            floatingActionButton: const AddChallengeFloatingButton(),
+            appBar: AppBar(
+              title: Text('Challenges',
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
+            body: Hero(
+                tag: 'challenges',
+                child: Container(
+                    padding: App.defaultPadding,
+                    child: Column(children: [
+                      TabBar(
+                        controller: _tabController,
+                        tabs: const [
+                          Tab(text: 'Challenges'),
+                          Tab(text: 'Completed'),
+                        ],
+                      ),
+                      Expanded(
+                          child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          ListView.builder(
+                              itemCount: challengesNotCompleted.length,
+                              itemBuilder: (context, index) {
+                                return ChallengeCard(
+                                    challenge: challengesNotCompleted[index]);
+                              }),
+                          ListView.builder(
+                              itemCount: challengesCompleted.length,
+                              itemBuilder: (context, index) {
+                                return ChallengeCard(
+                                    challenge: challengesCompleted[index]);
+                              }),
+                        ],
+                      ))
+                    ])))));
   }
 }

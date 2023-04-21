@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
+import 'package:weekly_challenge/models/task.dart';
 import 'package:weekly_challenge/navigation/router.dart';
 import 'package:weekly_challenge/theme_data.dart';
 import 'firebase_options.dart';
@@ -20,8 +22,9 @@ void main() async {
       print('User is signed in!');
     }
   });
-
-  FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  if (kIsWeb) {
+    FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  }
 
   runApp(App());
 }
@@ -42,7 +45,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => FirestoreHandler()),
+          ChangeNotifierProvider(
+            create: (_) => FirestoreHandler(),
+            lazy: true,
+          ),
+          ChangeNotifierProvider(create: (_) => TaskManager()),
         ],
         child: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
