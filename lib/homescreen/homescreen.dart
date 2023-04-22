@@ -6,8 +6,11 @@ import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/homescreen/components/box.dart';
 import 'package:weekly_challenge/homescreen/components/challenge_fab.dart';
+import 'package:weekly_challenge/homescreen/components/task_list.dart';
 import 'package:weekly_challenge/homescreen/components/week_stepper.dart';
+import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
+import 'package:weekly_challenge/models/participant.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,14 +61,22 @@ class _HomeScreenState extends State<HomeScreen> {
     Challenge? challengeNextWeek =
         context.watch<FirestoreHandler>().getChallengeForWeek(weeksSinceNow: 1);
 
+    Participant participant = context.watch<FirestoreHandler>().participant ??
+        Participant.loadingParticipant;
+
     return Scaffold(
         floatingActionButton: const ChallengeFloatingButton(),
         body: SizedBox.expand(
             child: FractionallySizedBox(
                 widthFactor: 0.8,
-                child: Container(
-                    child: ListView(
+                child: ListView(
                   children: [
+                    const SizedBox(height: 35),
+                    const Box(
+                      headline: "Meine Aufgaben",
+                      children: [TaskList()],
+                    ),
+                    const SizedBox(height: 35),
                     Box(
                       headline:
                           challengeThisWeek?.title ?? "Challenge loading...",
@@ -103,10 +114,23 @@ class _HomeScreenState extends State<HomeScreen> {
                       description: challengeNextWeek?.title ?? "Loading...",
                     ),
                     const SizedBox(height: 35),
-                    const Button(
-                        onPressed: FirebaseAuthHandler.logout, text: "Logout"),
-                    const SizedBox(height: 35)
+                    Box(headline: "Übersicht", children: [
+                      Text("Name: ${participant.name}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 10),
+                      Text("Email: ${participant.email}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 10),
+                      Text("Points: ${participant.points}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 35),
+                      const Button(
+                        text: "Abmelden",
+                        onPressed: FirebaseAuthHandler.logout,
+                      )
+                    ]),
+                    const SizedBox(height: 70)
                   ],
-                )))));
+                ))));
   }
 }

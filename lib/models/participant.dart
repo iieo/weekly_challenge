@@ -29,4 +29,11 @@ class Participant {
       'points': points,
     };
   }
+
+  static Participant loadingParticipant = Participant(
+      id: "loading",
+      name: "loading",
+      email: "loading",
+      profilePictureUrl: "loading",
+      points: 0);
 }
