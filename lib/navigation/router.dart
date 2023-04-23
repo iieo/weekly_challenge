@@ -69,6 +69,14 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
+          name: 'logout',
+          path: 'logout',
+          builder: (BuildContext context, GoRouterState state) {
+            FirebaseAuth.instance.signOut();
+            return const AuthScreen(child: LoginContainer());
+          },
+        ),
+        GoRoute(
           name: 'challenges',
           path: 'challenges',
           builder: (BuildContext context, GoRouterState state) {

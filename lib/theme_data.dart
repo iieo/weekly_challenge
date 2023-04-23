@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const Color backgroundDark = Color.fromARGB(255, 11, 25, 46);
 const Color backgroundDarkBrighter = Color.fromARGB(255, 24, 43, 69);
 
-const Color primaryColor = Color.fromARGB(255, 12, 201, 169);
+const Color primaryColor = Color.fromARGB(255, 11, 25, 46);
 const Color primaryColorBrighter = Color.fromARGB(255, 24, 43, 69);
 
 const Color secondaryColor = Color.fromARGB(255, 12, 201, 171);
@@ -15,16 +15,14 @@ const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
 ColorScheme colorScheme = ColorScheme.fromSeed(
   seedColor: primaryColorBrighter,
   brightness: Brightness.dark,
-  //primary: primaryColorBrighter,
+  primary: primaryColor,
   secondary: secondaryColor,
-  //surface: primaryColorBrighter,
   background: backgroundDark,
+  primaryContainer: primaryColorBrighter,
   error: Colors.red,
-  //onPrimary: whiteColor,
-  //onSecondary: whiteColor,
-  //onSurface: whiteColor,
-  //onBackground: whiteColor,
-  //onError: Colors.white,
+  onPrimary: whiteColor,
+  onBackground: whiteColor,
+  onError: Colors.white,
 );
 
 /*const Color backgroundDark = Color.fromARGB(255, 20, 36, 62);

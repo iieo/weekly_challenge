@@ -26,18 +26,18 @@ void main() async {
     FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   }
 
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  App({super.key});
+  const App({super.key});
 
   static const double defaultMargin = 30;
   static const EdgeInsets defaultPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 35);
 
   static const String name = 'Challenge';
-  static const String version = '0.0.1';
+  static const String version = '0.1.0';
   static const String buildNumber = '1';
   static const Duration animationDuration = Duration(milliseconds: 250);
 

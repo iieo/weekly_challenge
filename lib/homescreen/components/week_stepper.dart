@@ -53,6 +53,15 @@ class WeekStepper extends StatelessWidget {
     });
 
     return EasyStepper(
+      finishedStepBorderColor: Colors.transparent,
+      finishedStepBackgroundColor: Colors.transparent,
+      unreachedStepBorderColor: Colors.transparent,
+      unreachedStepBackgroundColor: Colors.transparent,
+      activeStepBorderType: BorderType.normal,
+      activeStepTextColor: Theme.of(context).colorScheme.onPrimary,
+      finishedStepTextColor: Theme.of(context).colorScheme.onPrimary,
+      unreachedStepTextColor: Theme.of(context).colorScheme.onPrimary,
+      activeStepBorderColor: Theme.of(context).colorScheme.onPrimary,
       activeStep: indexToday,
       steps: steps,
       lineType: LineType.normal,

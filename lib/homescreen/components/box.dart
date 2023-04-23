@@ -4,12 +4,12 @@ import 'package:weekly_challenge/main.dart';
 class Box extends StatelessWidget {
   final String headline;
   final String? description;
-  final List<Widget>? children;
-  final List<Widget>? sideChildren;
+  final Widget? child;
+  final Widget? sideChild;
   const Box(
       {super.key,
-      this.children,
-      this.sideChildren,
+      this.child,
+      this.sideChild,
       required this.headline,
       this.description});
 
@@ -49,14 +49,10 @@ class Box extends StatelessWidget {
                         )
                       : const SizedBox.shrink(),
                   const SizedBox(height: 35),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: children ?? [],
-                  )
+                  child ?? const SizedBox.shrink(),
                 ],
               )),
-              ...sideChildren ?? [],
+              sideChild ?? const SizedBox.shrink(),
             ]));
   }
 }

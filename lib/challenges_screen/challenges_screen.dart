@@ -46,36 +46,41 @@ class _ChallengesScreenState extends State<ChallengesScreen>
               title: Text('Challenges',
                   style: Theme.of(context).textTheme.titleLarge),
             ),
-            body: Hero(
-                tag: 'challenges',
-                child: Container(
-                    padding: App.defaultPadding,
-                    child: Column(children: [
-                      TabBar(
-                        controller: _tabController,
-                        tabs: const [
-                          Tab(text: 'Challenges'),
-                          Tab(text: 'Completed'),
-                        ],
-                      ),
-                      Expanded(
-                          child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          ListView.builder(
-                              itemCount: challengesNotCompleted.length,
-                              itemBuilder: (context, index) {
-                                return ChallengeCard(
-                                    challenge: challengesNotCompleted[index]);
-                              }),
-                          ListView.builder(
-                              itemCount: challengesCompleted.length,
-                              itemBuilder: (context, index) {
-                                return ChallengeCard(
-                                    challenge: challengesCompleted[index]);
-                              }),
-                        ],
-                      ))
-                    ])))));
+            body: Container(
+                padding: App.defaultPadding,
+                child: Column(children: [
+                  TabBar(
+                    labelColor: Theme.of(context).colorScheme.onPrimary,
+                    controller: _tabController,
+                    tabs: [
+                      Tab(
+                          text: 'Challenges',
+                          icon: Icon(Icons.list,
+                              color: Theme.of(context).colorScheme.onPrimary)),
+                      Tab(
+                          text: 'Completed',
+                          icon: Icon(Icons.done,
+                              color: Theme.of(context).colorScheme.onPrimary)),
+                    ],
+                  ),
+                  Expanded(
+                      child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      ListView.builder(
+                          itemCount: challengesNotCompleted.length,
+                          itemBuilder: (context, index) {
+                            return ChallengeCard(
+                                challenge: challengesNotCompleted[index]);
+                          }),
+                      ListView.builder(
+                          itemCount: challengesCompleted.length,
+                          itemBuilder: (context, index) {
+                            return ChallengeCard(
+                                challenge: challengesCompleted[index]);
+                          }),
+                    ],
+                  ))
+                ]))));
   }
 }
