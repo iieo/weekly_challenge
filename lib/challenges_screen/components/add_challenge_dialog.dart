@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
-import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 
 class AddChallengeDialog extends StatefulWidget {

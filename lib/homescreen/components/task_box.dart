@@ -48,49 +48,52 @@ class TaskBox extends StatelessWidget {
 
     Future<List<Task>> tasks = context.watch<TaskManager>().tasks;
 
-    return Box(headline: "Meine Aufgaben", children: [
-      Container(
-          constraints: const BoxConstraints(maxHeight: 500),
-          child: Column(children: [
-            Expanded(
-                child: FutureBuilder(
-                    future: tasks,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<Task> tasks = snapshot.data as List<Task>;
-                        //sort by completedDate (null first)
-                        tasks.sort((a, b) {
-                          if (a.dateCompleted == null &&
-                              b.dateCompleted == null) {
-                            return 0;
-                          } else if (a.dateCompleted == null) {
-                            return -1;
-                          } else if (b.dateCompleted == null) {
-                            return 1;
-                          } else {
-                            return b.dateCompleted!.compareTo(a.dateCompleted!);
-                          }
-                        });
-                        return ListView.builder(
-                            itemCount: tasks.length,
-                            itemBuilder: (context, index) {
-                              return TaskCard(task: tasks[index]);
-                            });
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    })),
-            Button(
-                onPressed: () => showAddTaskDialog(context), text: "Add Task"),
-            TextButton(
-                onPressed: () {
-                  context.read<TaskManager>().deleteAllTasks();
-                },
-                child: Text(
-                  "Alle Tasks löschen",
-                  style: Theme.of(context).textTheme.labelSmall,
-                )),
-          ]))
-    ]);
+    return Box(
+        headline: "Meine Aufgaben",
+        child: Container(
+            constraints: const BoxConstraints(maxHeight: 500),
+            child: Column(children: [
+              Expanded(
+                  child: FutureBuilder(
+                      future: tasks,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<Task> tasks = snapshot.data as List<Task>;
+                          //sort by completedDate (null first)
+                          tasks.sort((a, b) {
+                            if (a.dateCompleted == null &&
+                                b.dateCompleted == null) {
+                              return 0;
+                            } else if (a.dateCompleted == null) {
+                              return -1;
+                            } else if (b.dateCompleted == null) {
+                              return 1;
+                            } else {
+                              return b.dateCompleted!
+                                  .compareTo(a.dateCompleted!);
+                            }
+                          });
+                          return ListView.builder(
+                              itemCount: tasks.length,
+                              itemBuilder: (context, index) {
+                                return TaskCard(task: tasks[index]);
+                              });
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      })),
+              Button(
+                  onPressed: () => showAddTaskDialog(context),
+                  text: "Add Task"),
+              TextButton(
+                  onPressed: () {
+                    context.read<TaskManager>().deleteAllTasks();
+                  },
+                  child: Text(
+                    "Alle Tasks löschen",
+                    style: Theme.of(context).textTheme.labelSmall,
+                  )),
+            ])));
   }
 }

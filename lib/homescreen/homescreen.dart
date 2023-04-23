@@ -6,6 +6,7 @@ import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/homescreen/components/box.dart';
 import 'package:weekly_challenge/homescreen/components/challenge_fab.dart';
+import 'package:weekly_challenge/homescreen/components/friends_comparison.dart';
 import 'package:weekly_challenge/homescreen/components/task_box.dart';
 import 'package:weekly_challenge/homescreen/components/week_stepper.dart';
 import 'package:weekly_challenge/models/challenges.dart';
@@ -70,37 +71,40 @@ class _HomeScreenState extends State<HomeScreen> {
               horizontal: MediaQuery.of(context).size.width * 0.05,
               vertical: MediaQuery.of(context).size.height * 0.01),
           children: [
-            const TaskBox(),
+            const SizedBox(height: 35),
+            const Box(
+              headline: "Deine Freunde",
+              child: SizedBox(
+                height: 250,
+                child: FriendsComparison(),
+              ),
+            ),
             const SizedBox(height: 35),
             Box(
               headline: challengeThisWeek?.title ?? "Challenge loading...",
               description:
                   challengeThisWeek?.description ?? "Description loading...",
-              children: [
-                Visibility(
-                    visible: challengeThisWeek == null,
-                    child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary))
-              ],
+              child: Visibility(
+                  visible: challengeThisWeek == null,
+                  child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary)),
             ),
             const SizedBox(height: 35),
             Box(
               headline: "Heute",
               description: "Challenge erledigt?",
-              children: [
-                AnimatedDoneButton(
-                  onDone: () => _done(context),
-                  onUndo: () => _undoDone(context),
-                )
-              ],
+              child: AnimatedDoneButton(
+                onDone: () => _done(context),
+                onUndo: () => _undoDone(context),
+              ),
             ),
+            const SizedBox(height: 35),
+            const TaskBox(),
             const SizedBox(height: 35),
             const Box(
               headline: "Deine Erfolg",
               description: "Aktuelle Woche",
-              children: [
-                WeekStepper(),
-              ],
+              child: WeekStepper(),
             ),
             const SizedBox(height: 35),
             Box(
@@ -108,21 +112,25 @@ class _HomeScreenState extends State<HomeScreen> {
               description: challengeNextWeek?.title ?? "Loading...",
             ),
             const SizedBox(height: 35),
-            Box(headline: "Übersicht", children: [
-              Text("Name: ${participant.name}",
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 10),
-              Text("Email: ${participant.email}",
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 10),
-              Text("Points: ${participant.points}",
-                  style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 35),
-              const Button(
-                text: "Abmelden",
-                onPressed: FirebaseAuthHandler.logout,
-              )
-            ]),
+            Box(
+                headline: "Übersicht",
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Name: ${participant.name}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 10),
+                      Text("Email: ${participant.email}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 10),
+                      Text("Points: ${participant.points}",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(height: 35),
+                      const Button(
+                        text: "Abmelden",
+                        onPressed: FirebaseAuthHandler.logout,
+                      )
+                    ])),
             const SizedBox(height: 70)
           ],
         ));

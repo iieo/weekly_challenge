@@ -22,7 +22,6 @@ class FirestoreHandler extends ChangeNotifier {
     challenges = querySnapshot.docs
         .map((e) => Challenge.fromMap(e.id, e.data()))
         .toList();
-    notifyListeners();
   }
 
   Future<void> addChallenge(Challenge challenge) async {
@@ -72,7 +71,6 @@ class FirestoreHandler extends ChangeNotifier {
 
     participant =
         Participant.fromMap(documentSnapshot.id, documentSnapshot.data()!);
-    notifyListeners();
   }
 
   Future<void> _fetchParticipantsProfilePicture() async {
@@ -84,7 +82,6 @@ class FirestoreHandler extends ChangeNotifier {
       placeholder: (context, url) => CircularProgressIndicator(
           color: Theme.of(context).colorScheme.onPrimary),
     );
-    notifyListeners();
   }
 
   Future<void> updateParticipant(Participant participant) async {
@@ -120,7 +117,6 @@ class FirestoreHandler extends ChangeNotifier {
     challengeParticipations = querySnapshot.docs
         .map((e) => ChallengeParticipation.fromMap(e.id, e.data()))
         .toList();
-    notifyListeners();
   }
 
   Future<void> deleteChallengeParticipation(
@@ -226,6 +222,34 @@ class FirestoreHandler extends ChangeNotifier {
     updateChallenge(challenge);
   }
 
+  Map<String, List<ChallengeParticipation>> getChallengeParticipationsForWeek(
+      {int weeksSinceNow = 0}) {
+    DateTime monday = getMondayForWeek(weeksSinceNow);
+    DateTime sunday = getMondayForWeek(weeksSinceNow + 1);
+
+    List<ChallengeParticipation> challengeParticipationsForWeek =
+        challengeParticipations.where((element) {
+      return element.dateCompleted.isAfter(monday) &&
+          element.dateCompleted.isBefore(sunday);
+    }).toList();
+
+    Map<String, List<ChallengeParticipation>>
+        challengeParticipationsForWeekMap = {};
+
+    for (var challengeParticipation in challengeParticipationsForWeek) {
+      if (challengeParticipationsForWeekMap
+          .containsKey(challengeParticipation.pariticipantId)) {
+        challengeParticipationsForWeekMap[challengeParticipation.pariticipantId]
+            ?.add(challengeParticipation);
+      } else {
+        challengeParticipationsForWeekMap[
+            challengeParticipation.pariticipantId] = [challengeParticipation];
+      }
+    }
+
+    return challengeParticipationsForWeekMap;
+  }
+
   ///this method is called once the user has logged in
   void fetchData() async {
     print('fetching data');
@@ -234,6 +258,7 @@ class FirestoreHandler extends ChangeNotifier {
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();
     await _fetchParticipantsProfilePicture();
+    notifyListeners();
 
     selectChallengeForWeek(0);
     selectChallengeForWeek(1);
