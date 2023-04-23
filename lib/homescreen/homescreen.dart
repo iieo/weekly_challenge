@@ -6,9 +6,8 @@ import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/homescreen/components/box.dart';
 import 'package:weekly_challenge/homescreen/components/challenge_fab.dart';
-import 'package:weekly_challenge/homescreen/components/task_list.dart';
+import 'package:weekly_challenge/homescreen/components/task_box.dart';
 import 'package:weekly_challenge/homescreen/components/week_stepper.dart';
-import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
 
@@ -72,10 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView(
                   children: [
                     const SizedBox(height: 35),
-                    const Box(
-                      headline: "Meine Aufgaben",
-                      children: [TaskList()],
-                    ),
+                    const TaskBox(),
                     const SizedBox(height: 35),
                     Box(
                       headline:

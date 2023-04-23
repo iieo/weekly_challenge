@@ -52,10 +52,19 @@ class _ChallengesScreenState extends State<ChallengesScreen>
                     padding: App.defaultPadding,
                     child: Column(children: [
                       TabBar(
+                        labelColor: Theme.of(context).colorScheme.onPrimary,
                         controller: _tabController,
-                        tabs: const [
-                          Tab(text: 'Challenges'),
-                          Tab(text: 'Completed'),
+                        tabs: [
+                          Tab(
+                              text: 'Challenges',
+                              icon: Icon(Icons.list,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary)),
+                          Tab(
+                              text: 'Completed',
+                              icon: Icon(Icons.done,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary)),
                         ],
                       ),
                       Expanded(
