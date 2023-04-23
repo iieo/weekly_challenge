@@ -65,68 +65,66 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         floatingActionButton: const ChallengeFloatingButton(),
-        body: SizedBox.expand(
-            child: FractionallySizedBox(
-                widthFactor: 0.8,
-                child: ListView(
-                  children: [
-                    const SizedBox(height: 35),
-                    const TaskBox(),
-                    const SizedBox(height: 35),
-                    Box(
-                      headline:
-                          challengeThisWeek?.title ?? "Challenge loading...",
-                      description: challengeThisWeek?.description ??
-                          "Description loading...",
-                      children: [
-                        Visibility(
-                            visible: challengeThisWeek == null,
-                            child: CircularProgressIndicator(
-                                color: Theme.of(context).colorScheme.onPrimary))
-                      ],
-                    ),
-                    const SizedBox(height: 35),
-                    Box(
-                      headline: "Heute",
-                      description: "Challenge erledigt?",
-                      children: [
-                        AnimatedDoneButton(
-                          onDone: () => _done(context),
-                          onUndo: () => _undoDone(context),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 35),
-                    const Box(
-                      headline: "Deine Erfolg",
-                      description: "Aktuelle Woche",
-                      children: [
-                        WeekStepper(),
-                      ],
-                    ),
-                    const SizedBox(height: 35),
-                    Box(
-                      headline: "Nächste Challenge",
-                      description: challengeNextWeek?.title ?? "Loading...",
-                    ),
-                    const SizedBox(height: 35),
-                    Box(headline: "Übersicht", children: [
-                      Text("Name: ${participant.name}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      Text("Email: ${participant.email}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      Text("Points: ${participant.points}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 35),
-                      const Button(
-                        text: "Abmelden",
-                        onPressed: FirebaseAuthHandler.logout,
-                      )
-                    ]),
-                    const SizedBox(height: 70)
-                  ],
-                ))));
+        body: ListView(
+          padding: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.05,
+              vertical: MediaQuery.of(context).size.height * 0.01),
+          children: [
+            const TaskBox(),
+            const SizedBox(height: 35),
+            Box(
+              headline: challengeThisWeek?.title ?? "Challenge loading...",
+              description:
+                  challengeThisWeek?.description ?? "Description loading...",
+              children: [
+                Visibility(
+                    visible: challengeThisWeek == null,
+                    child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary))
+              ],
+            ),
+            const SizedBox(height: 35),
+            Box(
+              headline: "Heute",
+              description: "Challenge erledigt?",
+              children: [
+                AnimatedDoneButton(
+                  onDone: () => _done(context),
+                  onUndo: () => _undoDone(context),
+                )
+              ],
+            ),
+            const SizedBox(height: 35),
+            const Box(
+              headline: "Deine Erfolg",
+              description: "Aktuelle Woche",
+              children: [
+                WeekStepper(),
+              ],
+            ),
+            const SizedBox(height: 35),
+            Box(
+              headline: "Nächste Challenge",
+              description: challengeNextWeek?.title ?? "Loading...",
+            ),
+            const SizedBox(height: 35),
+            Box(headline: "Übersicht", children: [
+              Text("Name: ${participant.name}",
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
+              Text("Email: ${participant.email}",
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 10),
+              Text("Points: ${participant.points}",
+                  style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 35),
+              const Button(
+                text: "Abmelden",
+                onPressed: FirebaseAuthHandler.logout,
+              )
+            ]),
+            const SizedBox(height: 70)
+          ],
+        ));
   }
 }
