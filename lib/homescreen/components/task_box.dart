@@ -79,8 +79,14 @@ class TaskBox extends StatelessWidget {
                                 return TaskCard(task: tasks[index]);
                               });
                         } else {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                              child: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: CircularProgressIndicator(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary)));
                         }
                       })),
               Button(

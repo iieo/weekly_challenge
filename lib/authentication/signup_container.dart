@@ -25,10 +25,6 @@ class _SignUpContainer extends State<SignUpContainer> {
   bool passwordsMatch = true;
   String infoText = '';
 
-  void showError(String message) {
-    showSimpleErrorDialog(context, message);
-  }
-
   void checkPasswordEquality(String value) {
     if (passwordController.text.compareTo(checkPasswordController.text) == 0) {
       setState(() {
@@ -100,32 +96,30 @@ class _SignUpContainer extends State<SignUpContainer> {
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (!passwordsMatch) {
-                        showSimpleErrorDialog(
-                            context, "Passwords don't match!");
+                        showSimpleErrorDialog(context, "Passwords don't match!",
+                            "Please try again");
                         return;
                       }
                       setState(() {
                         loading = true;
                       });
-                      FirebaseAuthHandler.trySignup(emailController.text,
-                              emailController.text, passwordController.text)
-                          .onError((error, stackTrace) {
-                        if (error is FirebaseAuthException) {
-                          showSimpleErrorDialog(context,
-                              FirebaseAuthHandler.getFirebaseErrorText(error));
-                          setState(() {
-                            loading = false;
-                          });
-                        } else {
-                          setState(() {
-                            showSimpleErrorDialog(
-                                context, 'Unknown error occured.');
-                            loading = false;
-                          });
-                        }
-                      });
+                      try {
+                        await FirebaseAuthHandler.trySignup(
+                            emailController.text,
+                            emailController.text,
+                            passwordController.text);
+                      } on FirebaseAuthException catch (e) {
+                        setState(() {
+                          loading = false;
+                        });
+                        showSimpleErrorDialog(context, "Error signing up",
+                            FirebaseAuthHandler.getFirebaseErrorText(e));
+                      } catch (e) {
+                        showSimpleErrorDialog(context, "Unkown Error.",
+                            "Please try again or contact +49 176 82756321");
+                      }
                     },
                     child: const Text('Sign up'),
                   ))),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'button.dart';
-
-void showSimpleErrorDialog(BuildContext context, String errorMsg) {
-  showSimpleDialog(context, 'Ups Something went wrong!', errorMsg);
+void showSimpleErrorDialog(
+    BuildContext context, String errorTitle, String errorMsg) {
+  showSimpleDialog(context, errorTitle, errorMsg);
 }
 
 void showSimpleDialog(BuildContext context, String title, String errorMsg) {

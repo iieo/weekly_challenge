@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/firebase/firebase_auth_handler.dart';
 import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
@@ -56,17 +57,15 @@ class FirestoreHandler extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _fetchParticipant() async {
-    if (FirebaseAuth.instance.currentUser == null) return;
-
+  Future<void> _fetchParticipant(User user) async {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(user.uid)
             .get();
 
     if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-      return;
+      throw Exception('User not found');
     }
 
     participant =
@@ -79,8 +78,11 @@ class FirestoreHandler extends ChangeNotifier {
         'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
     participant?.profilePicture = CachedNetworkImage(
       imageUrl: file.fullPath,
-      placeholder: (context, url) => CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.onPrimary),
+      placeholder: (context, url) => SizedBox(
+          height: 50,
+          width: 50,
+          child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onPrimary)),
     );
   }
 
@@ -251,9 +253,9 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   ///this method is called once the user has logged in
-  void fetchData() async {
+  void fetchData(User user) async {
     print('fetching data');
-    await _fetchParticipant();
+    await _fetchParticipant(user);
     await _fetchChallengeParticipations();
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();

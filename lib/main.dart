@@ -55,12 +55,15 @@ class App extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.onPrimary);
+                return SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary));
               } else {
                 User? user = snapshot.data;
-                if (user != null) {
-                  context.read<FirestoreHandler>().fetchData();
+                if (user != null && user.emailVerified) {
+                  context.read<FirestoreHandler>().fetchData(user);
                 }
                 return MaterialApp.router(
                     routerConfig: router,

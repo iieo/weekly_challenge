@@ -15,8 +15,11 @@ class WeekStepper extends StatelessWidget {
         context.watch<FirestoreHandler>().getChallengeForWeek();
 
     if (todaysChallenge == null) {
-      return CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.onPrimary);
+      return SizedBox(
+          height: 50,
+          width: 50,
+          child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.onPrimary));
     }
     DateTime firstDate = todaysChallenge.activeSince!;
     for (int i = 0; i < 7; i++) {

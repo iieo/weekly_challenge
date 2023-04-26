@@ -86,8 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   challengeThisWeek?.description ?? "Description loading...",
               child: Visibility(
                   visible: challengeThisWeek == null,
-                  child: CircularProgressIndicator(
-                      color: Theme.of(context).colorScheme.onPrimary)),
+                  child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.onPrimary))),
             ),
             const SizedBox(height: 35),
             Box(
