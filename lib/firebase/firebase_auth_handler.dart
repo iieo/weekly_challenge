@@ -33,17 +33,29 @@ class FirebaseAuthHandler {
     await FirebaseAuth.instance.currentUser!.sendEmailVerification();
   }
 
-  static Future<void> tryLogin(String email, String password) async {
-    await FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email, password: password)
-        .timeout(Duration(seconds: 15),
-            onTimeout: () => throw FirebaseAuthException(code: "timeout"));
+  static bool isUserLoggedIn() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
 
-    if (FirebaseAuth.instance.currentUser != null) {
-      await FirebaseAuth.instance.currentUser!.reload();
+  static Future<bool> isUsersEmailVerified() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return false;
     }
 
-    if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+    await FirebaseAuth.instance.currentUser!.reload();
+
+    return FirebaseAuth.instance.currentUser!.emailVerified;
+  }
+
+  //returns if successful
+  static Future<void> tryLogin(String email, String password) async {
+    UserCredential credentials = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password)
+        .timeout(const Duration(seconds: 15),
+            onTimeout: () => throw FirebaseAuthException(code: "timeout"));
+
+    if (credentials.user == null || !credentials.user!.emailVerified) {
+      await FirebaseAuth.instance.signOut();
       throw EmailNotVerifiedException();
     }
   }
@@ -52,7 +64,7 @@ class FirebaseAuthHandler {
       String name, String email, String password) async {
     UserCredential credentials = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password)
-        .timeout(Duration(seconds: 15),
+        .timeout(const Duration(seconds: 15),
             onTimeout: () => throw FirebaseAuthException(code: "timeout"));
 
     if (credentials.user == null) {
@@ -65,12 +77,13 @@ class FirebaseAuthHandler {
         .collection('users')
         .doc(credentials.user!.uid)
         .set({'name': name, 'email': email, 'points': 0});
-    await FirebaseAuth.instance.currentUser!.reload();
+
+    await FirebaseAuth.instance.signOut();
   }
 
   static Future<void> forgotPassword(String email) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email).timeout(
-        Duration(seconds: 15),
+        const Duration(seconds: 15),
         onTimeout: () => throw FirebaseAuthException(code: "timeout"));
   }
 
