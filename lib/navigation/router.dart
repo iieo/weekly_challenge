@@ -4,42 +4,40 @@ import 'package:go_router/go_router.dart';
 import 'package:weekly_challenge/authentication/authentication.dart';
 import 'package:weekly_challenge/authentication/login_container.dart';
 import 'package:weekly_challenge/authentication/signup_container.dart';
-import 'package:weekly_challenge/challenges_screen/challenges_screen.dart';
-import 'package:weekly_challenge/homescreen/homescreen.dart';
+import 'package:weekly_challenge/screens/bottom_navigation_shell.dart';
+import 'package:weekly_challenge/screens/challenges_screen/challenges_screen.dart';
+import 'package:weekly_challenge/screens/homescreen/homescreen.dart';
 import 'package:weekly_challenge/navigation/gorouter_refresh_stream.dart';
+import 'package:weekly_challenge/screens/profile_screen/profile_screen.dart';
+import 'package:weekly_challenge/screens/tasks_screen/tasks_screen.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter router = GoRouter(
+  initialLocation: "/",
+  navigatorKey: _rootNavigatorKey,
   redirect: (context, state) {
-    bool loggedIn = FirebaseAuth.instance.currentUser != null;
-    bool emailVerified = false;
-    if (loggedIn) {
-      emailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-    }
-
     const loginLocation = "/login";
+    const signupLocation = "/signup";
     const homeLocation = "/";
 
-    final loggingIn = state.subloc == loginLocation;
+    final bool loggedIn = FirebaseAuth.instance.currentUser != null;
+    final bool loggingIn =
+        state.subloc == loginLocation || state.subloc == signupLocation;
 
-    if (!loggedIn) {
-      if (state.subloc == "/signup") {
-        return null;
-      }
+    if (loggedIn &&
+        !FirebaseAuth.instance.currentUser!.emailVerified &&
+        state.subloc == signupLocation) {
       return loginLocation;
     }
 
-    if (loggedIn && !emailVerified) {
-      if (state.subloc == loginLocation) {
-        return null;
-      }
-      print("is here");
+    if (!loggedIn && !loggingIn) {
       return loginLocation;
     }
 
-    if (loggingIn) {
-      print("login");
-      state.queryParams['from'];
-      return state.queryParams['from'] ?? homeLocation;
+    if (loggingIn && loggedIn) {
+      return homeLocation;
     }
 
     return null;
@@ -49,34 +47,61 @@ final GoRouter router = GoRouter(
   errorBuilder: (context, state) => const NotFoundScreen(),
   routes: <RouteBase>[
     GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeScreen();
+      path: '/login',
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return const NoTransitionPage(
+            child: AuthScreen(child: LoginContainer()));
       },
-      routes: <RouteBase>[
-        GoRoute(
-          name: 'login',
-          path: 'login',
-          builder: (BuildContext context, GoRouterState state) {
-            return const AuthScreen(child: LoginContainer());
-          },
-        ),
-        GoRoute(
-          name: 'signup',
-          path: 'signup',
-          builder: (BuildContext context, GoRouterState state) {
-            return const AuthScreen(child: SignUpContainer());
-          },
-        ),
-        GoRoute(
-          name: 'challenges',
-          path: 'challenges',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ChallengesScreen();
-          },
-        ),
-      ],
     ),
+    GoRoute(
+      path: '/signup',
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return const NoTransitionPage(
+            child: AuthScreen(child: SignUpContainer()));
+      },
+    ),
+    GoRoute(
+      path: '/logout',
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        FirebaseAuth.instance.signOut();
+        return const NoTransitionPage(
+            child: AuthScreen(child: LoginContainer()));
+      },
+    ),
+    ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        pageBuilder: (context, state, child) {
+          return NoTransitionPage(child: BottomNavigationShell(child: child));
+        },
+        routes: [
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/challenges',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return const NoTransitionPage(child: ChallengesScreen());
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/profil',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return const NoTransitionPage(child: ProfileScreen());
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/tasks',
+            pageBuilder: (BuildContext context, GoRouterState state) {
+              return const NoTransitionPage(child: TasksScreen());
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: "/",
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: HomeScreen()),
+          ),
+        ])
   ],
 );
 

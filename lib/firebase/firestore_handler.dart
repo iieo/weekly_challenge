@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/firebase/firebase_auth_handler.dart';
 import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
@@ -22,7 +23,6 @@ class FirestoreHandler extends ChangeNotifier {
     challenges = querySnapshot.docs
         .map((e) => Challenge.fromMap(e.id, e.data()))
         .toList();
-    notifyListeners();
   }
 
   Future<void> addChallenge(Challenge challenge) async {
@@ -57,22 +57,19 @@ class FirestoreHandler extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _fetchParticipant() async {
-    if (FirebaseAuth.instance.currentUser == null) return;
-
+  Future<void> _fetchParticipant(User user) async {
     DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .doc(user.uid)
             .get();
 
     if (!documentSnapshot.exists || documentSnapshot.data() == null) {
-      return;
+      throw Exception('User not found');
     }
 
     participant =
         Participant.fromMap(documentSnapshot.id, documentSnapshot.data()!);
-    notifyListeners();
   }
 
   Future<void> _fetchParticipantsProfilePicture() async {
@@ -81,10 +78,13 @@ class FirestoreHandler extends ChangeNotifier {
         'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
     participant?.profilePicture = CachedNetworkImage(
       imageUrl: file.fullPath,
-      placeholder: (context, url) => CircularProgressIndicator(
-          color: Theme.of(context).colorScheme.onPrimary),
+      placeholder: (context, url) => Center(
+          child: SizedBox(
+              height: 50,
+              width: 50,
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary))),
     );
-    notifyListeners();
   }
 
   Future<void> updateParticipant(Participant participant) async {
@@ -120,7 +120,6 @@ class FirestoreHandler extends ChangeNotifier {
     challengeParticipations = querySnapshot.docs
         .map((e) => ChallengeParticipation.fromMap(e.id, e.data()))
         .toList();
-    notifyListeners();
   }
 
   Future<void> deleteChallengeParticipation(
@@ -226,14 +225,43 @@ class FirestoreHandler extends ChangeNotifier {
     updateChallenge(challenge);
   }
 
+  Map<String, List<ChallengeParticipation>> getChallengeParticipationsForWeek(
+      {int weeksSinceNow = 0}) {
+    DateTime monday = getMondayForWeek(weeksSinceNow);
+    DateTime sunday = getMondayForWeek(weeksSinceNow + 1);
+
+    List<ChallengeParticipation> challengeParticipationsForWeek =
+        challengeParticipations.where((element) {
+      return element.dateCompleted.isAfter(monday) &&
+          element.dateCompleted.isBefore(sunday);
+    }).toList();
+
+    Map<String, List<ChallengeParticipation>>
+        challengeParticipationsForWeekMap = {};
+
+    for (var challengeParticipation in challengeParticipationsForWeek) {
+      if (challengeParticipationsForWeekMap
+          .containsKey(challengeParticipation.pariticipantId)) {
+        challengeParticipationsForWeekMap[challengeParticipation.pariticipantId]
+            ?.add(challengeParticipation);
+      } else {
+        challengeParticipationsForWeekMap[
+            challengeParticipation.pariticipantId] = [challengeParticipation];
+      }
+    }
+
+    return challengeParticipationsForWeekMap;
+  }
+
   ///this method is called once the user has logged in
-  void fetchData() async {
+  void fetchData(User user) async {
     print('fetching data');
-    await _fetchParticipant();
+    await _fetchParticipant(user);
     await _fetchChallengeParticipations();
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();
     await _fetchParticipantsProfilePicture();
+    notifyListeners();
 
     selectChallengeForWeek(0);
     selectChallengeForWeek(1);

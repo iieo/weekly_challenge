@@ -18,7 +18,7 @@ class Button extends StatelessWidget {
     required this.onPressed,
     this.foregorundColor,
     this.backgroundColor,
-    this.borderRadius = 10,
+    this.borderRadius = 4,
   });
 
   Widget _buildChild() {

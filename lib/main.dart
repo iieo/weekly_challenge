@@ -26,20 +26,16 @@ void main() async {
     FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   }
 
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  App({super.key});
+  const App({super.key});
 
+  static const double defaultRadius = 10;
   static const double defaultMargin = 30;
   static const EdgeInsets defaultPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 35);
-
-  static const String name = 'Challenge';
-  static const String version = '0.0.1';
-  static const String buildNumber = '1';
-  static const Duration animationDuration = Duration(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {
@@ -55,17 +51,21 @@ class App extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.onPrimary);
+                return Center(
+                    child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                            color: Theme.of(context).colorScheme.onPrimary)));
               } else {
                 User? user = snapshot.data;
-                if (user != null) {
-                  context.read<FirestoreHandler>().fetchData();
+                if (user != null && user.emailVerified) {
+                  context.read<FirestoreHandler>().fetchData(user);
                 }
                 return MaterialApp.router(
                     routerConfig: router,
                     debugShowCheckedModeBanner: false,
-                    title: App.name,
+                    title: "Weekly Challenge",
                     theme: themeData);
               }
             }));

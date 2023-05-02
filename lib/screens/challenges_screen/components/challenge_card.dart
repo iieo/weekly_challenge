@@ -1,14 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weekly_challenge/challenges_screen/components/add_challenge_dialog.dart';
+import 'package:weekly_challenge/screens/challenges_screen/components/add_challenge_dialog.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
-import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 
 class ChallengeCard extends StatelessWidget {
   final Challenge challenge;
   const ChallengeCard({super.key, required this.challenge});
+
+  void _dislikeChallenge(BuildContext context, Challenge challenge) {
+    String firebaseId = FirebaseAuth.instance.currentUser!.uid;
+    if (challenge.dislikedBy.contains(firebaseId)) {
+      challenge.dislikedBy.remove(firebaseId);
+    } else {
+      challenge.dislikedBy.add(firebaseId);
+      challenge.likedBy.remove(firebaseId);
+    }
+    context.read<FirestoreHandler>().updateChallenge(challenge);
+  }
+
+  void _likeChallenge(BuildContext context, Challenge challenge) {
+    String firebaseId = FirebaseAuth.instance.currentUser!.uid;
+    if (challenge.likedBy.contains(firebaseId)) {
+      challenge.likedBy.remove(firebaseId);
+    } else {
+      challenge.likedBy.add(firebaseId);
+      challenge.dislikedBy.remove(firebaseId);
+    }
+    context.read<FirestoreHandler>().updateChallenge(challenge);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +49,16 @@ class ChallengeCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
-                      onPressed: () {
-                        challenge.likedBy.add(firebaseId);
-                        context
-                            .read<FirestoreHandler>()
-                            .updateChallenge(challenge);
-                      },
+                      onPressed: () => _likeChallenge(context, challenge),
                       icon: Icon(Icons.thumb_up,
                           color: challenge.likedBy.contains(firebaseId)
                               ? Theme.of(context).colorScheme.secondary
                               : Theme.of(context).colorScheme.onPrimary)),
                   IconButton(
-                      onPressed: () {
-                        challenge.dislikedBy.add(firebaseId);
-                        context
-                            .read<FirestoreHandler>()
-                            .updateChallenge(challenge);
-                      },
+                      onPressed: () => _dislikeChallenge(context, challenge),
                       icon: Icon(Icons.thumb_down,
                           color: challenge.dislikedBy.contains(firebaseId)
-                              ? Theme.of(context).colorScheme.secondary
+                              ? Theme.of(context).colorScheme.error
                               : Theme.of(context).colorScheme.onPrimary)),
                   IconButton(
                       onPressed: () => showDialog(

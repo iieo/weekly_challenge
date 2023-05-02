@@ -35,7 +35,7 @@ class _AuthScreen extends State<AuthScreen> {
             child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(App.defaultRadius),
                   /*gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
@@ -81,7 +81,10 @@ class LoadingScreen extends StatelessWidget {
         child: Container(
             color: Colors.white.withOpacity(0.5),
             child: Center(
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.onPrimary))));
+                child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(
+                        color: Theme.of(context).colorScheme.onPrimary)))));
   }
 }

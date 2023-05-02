@@ -96,6 +96,12 @@ class TaskManager extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteTask(Task task) {
+    _tasks!.remove(task);
+    _writeTasks();
+    notifyListeners();
+  }
+
   void _writeTasks() {
     List<Map<String, String>> jsonTasks = [];
     for (var task in _tasks!) {

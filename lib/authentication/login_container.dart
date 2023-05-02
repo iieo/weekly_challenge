@@ -50,17 +50,13 @@ class _LoginContainer extends State<LoginContainer> {
   }
 
   Future<bool> ShowEmailNotVerifiedDialog(BuildContext context) async {
-    if (FirebaseAuth.instance.currentUser == null) {
-      return false;
-    }
-
     await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text("Email not verified"),
             content: Text(
-                'Please verify your email before logging in. Email was sent to ${FirebaseAuth.instance.currentUser!.email}'),
+                'Please verify your email before logging in. Email was sent to ${emailController.text}'),
             actions: [
               TextButton(
                   onPressed: () {
@@ -79,6 +75,24 @@ class _LoginContainer extends State<LoginContainer> {
         });
 
     return true;
+  }
+
+  void _loginUser() async {
+    UpdateLoading(true);
+    try {
+      await FirebaseAuthHandler.tryLogin(
+          emailController.text, passwordController.text);
+    } on FirebaseAuthException catch (e) {
+      showSimpleErrorDialog(
+          context, "Login failed", FirebaseAuthHandler.getFirebaseErrorText(e));
+    } on EmailNotVerifiedException catch (e) {
+      ShowEmailNotVerifiedDialog(context);
+    } catch (e) {
+      print(e);
+      showSimpleErrorDialog(context, "Unkown Error.",
+          "Please try again or contact +49 176 82756321");
+    }
+    UpdateLoading(false);
   }
 
   @override
@@ -116,34 +130,13 @@ class _LoginContainer extends State<LoginContainer> {
                       hintText: 'Enter your password'),
                 ),
               )),
-          Container(
+          SizedBox(
               width: loginWidth,
               height: 65,
               child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: ElevatedButton(
-                    onPressed: () {
-                      UpdateLoading(true);
-                      FirebaseAuthHandler.tryLogin(
-                              emailController.text, passwordController.text)
-                          .then((value) {
-                        FirebaseAuth.instance.currentUser!.reload();
-                        if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-                          ShowEmailNotVerifiedDialog(context);
-                        }
-                        UpdateLoading(false);
-                      }).onError((error, stackTrace) {
-                        UpdateLoading(false);
-                        if (error is FirebaseAuthException) {
-                          showSimpleErrorDialog(context,
-                              FirebaseAuthHandler.getFirebaseErrorText(error));
-                        } else if (error is EmailNotVerifiedException) {
-                          ShowEmailNotVerifiedDialog(context);
-                        } else {
-                          showSimpleErrorDialog(context, "Unkown Error.");
-                        }
-                      });
-                    },
+                    onPressed: _loginUser,
                     child: const Text('Login'),
                   ))),
           SizedBox(
@@ -185,11 +178,14 @@ class _LoginContainer extends State<LoginContainer> {
                                 if (error is FirebaseAuthException) {
                                   showSimpleErrorDialog(
                                       context,
+                                      "Password reset failed",
                                       FirebaseAuthHandler.getFirebaseErrorText(
                                           error));
                                 } else {
                                   showSimpleErrorDialog(
-                                      context, "Unkown Error.");
+                                      context,
+                                      "Unkown Error.",
+                                      "Please try again or contact +49 176 82756321");
                                 }
                               });
                             }),
