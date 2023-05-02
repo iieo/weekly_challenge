@@ -100,6 +100,7 @@ class TaskBox extends StatelessWidget {
                     "Alle Tasks löschen",
                     style: Theme.of(context).textTheme.labelSmall,
                   )),
+              const SizedBox(height: 35),
             ])));
   }
 }

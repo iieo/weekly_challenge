@@ -78,11 +78,12 @@ class FirestoreHandler extends ChangeNotifier {
         'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
     participant?.profilePicture = CachedNetworkImage(
       imageUrl: file.fullPath,
-      placeholder: (context, url) => SizedBox(
-          height: 50,
-          width: 50,
-          child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.onPrimary)),
+      placeholder: (context, url) => Center(
+          child: SizedBox(
+              height: 50,
+              width: 50,
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary))),
     );
   }
 

@@ -63,7 +63,8 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
   Widget build(BuildContext context) {
     bool? isDoneForToday = context.watch<FirestoreHandler>().isDoneForToday;
     if (isDoneForToday == null) {
-      return const CircularProgressIndicator();
+      return const SizedBox(
+          height: 50, width: 50, child: CircularProgressIndicator());
     }
     if (isDoneForToday && isLoading) {
       _controller.value = 1;
@@ -83,7 +84,6 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
                   'assets/animations/done.json',
                   repeat: false,
                   controller: _controller,
-                  
                   onLoaded: (composition) {
                     _controller.duration = composition.duration;
                     _controller.reverseDuration = Duration(

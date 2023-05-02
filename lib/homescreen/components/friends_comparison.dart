@@ -30,8 +30,8 @@ class _FriendsComparisonState extends State<FriendsComparison> {
       borderData: borderData,
       lineBarsData: lineBarsData,
       minX: 0,
-      maxX: 14,
-      maxY: 4,
+      maxX: 7,
+      maxY: 7,
       minY: 0,
     );
 
@@ -134,7 +134,7 @@ class _FriendsComparisonState extends State<FriendsComparison> {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 10,
+      space: 4,
       child: text,
     );
   }

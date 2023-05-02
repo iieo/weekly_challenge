@@ -66,76 +66,81 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         floatingActionButton: const ChallengeFloatingButton(),
-        body: ListView(
-          padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05,
-              vertical: MediaQuery.of(context).size.height * 0.01),
-          children: [
-            const SizedBox(height: 35),
-            const Box(
-              headline: "Deine Freunde",
-              child: SizedBox(
-                height: 250,
-                child: FriendsComparison(),
-              ),
-            ),
-            const SizedBox(height: 35),
-            Box(
-              headline: challengeThisWeek?.title ?? "Challenge loading...",
-              description:
-                  challengeThisWeek?.description ?? "Description loading...",
-              child: Visibility(
-                  visible: challengeThisWeek == null,
+        body: SafeArea(
+            top: true,
+            bottom: true,
+            child: ListView(
+              padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                  vertical: MediaQuery.of(context).size.height * 0.01),
+              children: [
+                const SizedBox(height: 20),
+                Box(
+                  headline: challengeThisWeek?.title ?? "Challenge loading...",
+                  description: challengeThisWeek?.description ??
+                      "Description loading...",
+                  child: Center(
+                      child: Visibility(
+                          visible: challengeThisWeek == null,
+                          child: SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: CircularProgressIndicator(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimary)))),
+                ),
+                const SizedBox(height: 35),
+                Box(
+                  headline: "Heute",
+                  description: "Challenge erledigt?",
+                  child: AnimatedDoneButton(
+                    onDone: () => _done(context),
+                    onUndo: () => _undoDone(context),
+                  ),
+                ),
+                const SizedBox(height: 35),
+                const TaskBox(),
+                const Box(
+                  headline: "Deine Freunde",
                   child: SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(
-                          color: Theme.of(context).colorScheme.onPrimary))),
-            ),
-            const SizedBox(height: 35),
-            Box(
-              headline: "Heute",
-              description: "Challenge erledigt?",
-              child: AnimatedDoneButton(
-                onDone: () => _done(context),
-                onUndo: () => _undoDone(context),
-              ),
-            ),
-            const SizedBox(height: 35),
-            const TaskBox(),
-            const SizedBox(height: 35),
-            const Box(
-              headline: "Deine Erfolg",
-              description: "Aktuelle Woche",
-              child: WeekStepper(),
-            ),
-            const SizedBox(height: 35),
-            Box(
-              headline: "Nächste Challenge",
-              description: challengeNextWeek?.title ?? "Loading...",
-            ),
-            const SizedBox(height: 35),
-            Box(
-                headline: "Übersicht",
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Name: ${participant.name}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      Text("Email: ${participant.email}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      Text("Points: ${participant.points}",
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 35),
-                      const Button(
-                        text: "Abmelden",
-                        onPressed: FirebaseAuthHandler.logout,
-                      )
-                    ])),
-            const SizedBox(height: 70)
-          ],
-        ));
+                    height: 250,
+                    child: FriendsComparison(),
+                  ),
+                ),
+                const SizedBox(height: 35),
+                const Box(
+                  headline: "Deine Erfolg",
+                  description: "Aktuelle Woche",
+                  child: WeekStepper(),
+                ),
+                const SizedBox(height: 35),
+                Box(
+                  headline: "Nächste Challenge",
+                  description: challengeNextWeek?.title ?? "Loading...",
+                ),
+                const SizedBox(height: 35),
+                Box(
+                    headline: "Übersicht",
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text("Name: ${participant.name}",
+                              style: Theme.of(context).textTheme.titleMedium),
+                          const SizedBox(height: 10),
+                          Text("Email: ${participant.email}",
+                              style: Theme.of(context).textTheme.titleMedium),
+                          const SizedBox(height: 10),
+                          Text("Points: ${participant.points}",
+                              style: Theme.of(context).textTheme.titleMedium),
+                          const SizedBox(height: 35),
+                          const Button(
+                            text: "Abmelden",
+                            onPressed: FirebaseAuthHandler.logout,
+                          )
+                        ])),
+                const SizedBox(height: 70)
+              ],
+            )));
   }
 }
