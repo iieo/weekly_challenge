@@ -1,5 +1,4 @@
 import 'package:easy_stepper/easy_stepper.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/challenges.dart';
@@ -15,11 +14,12 @@ class WeekStepper extends StatelessWidget {
         context.watch<FirestoreHandler>().getChallengeForWeek();
 
     if (todaysChallenge == null) {
-      return SizedBox(
-          height: 50,
-          width: 50,
-          child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.onPrimary));
+      return Center(
+          child: SizedBox(
+              height: 50,
+              width: 50,
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.onPrimary)));
     }
     DateTime firstDate = todaysChallenge.activeSince!;
     for (int i = 0; i < 7; i++) {
@@ -32,9 +32,12 @@ class WeekStepper extends StatelessWidget {
 
     Widget getStepAvatar(int index) {
       if (index > indexToday) {
-        return const CircleAvatar(
-          child: Icon(Icons.border_color, color: Colors.white),
-        );
+        return const SizedBox(
+            width: 50,
+            height: 50,
+            child: CircleAvatar(
+              child: Icon(Icons.border_color, color: Colors.white),
+            ));
       }
       return doneLastDays[index]
           ? const CircleAvatar(
