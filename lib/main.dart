@@ -36,11 +36,6 @@ class App extends StatelessWidget {
   static const EdgeInsets defaultPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 35);
 
-  static const String name = 'Challenge';
-  static const String version = '0.1.0';
-  static const String buildNumber = '1';
-  static const Duration animationDuration = Duration(milliseconds: 250);
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -69,7 +64,7 @@ class App extends StatelessWidget {
                 return MaterialApp.router(
                     routerConfig: router,
                     debugShowCheckedModeBanner: false,
-                    title: App.name,
+                    title: "Weekly Challenge",
                     theme: themeData);
               }
             }));

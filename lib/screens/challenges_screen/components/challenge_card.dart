@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weekly_challenge/challenges_screen/components/add_challenge_dialog.dart';
+import 'package:weekly_challenge/screens/challenges_screen/components/add_challenge_dialog.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
-import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 
 class ChallengeCard extends StatelessWidget {
@@ -16,6 +15,7 @@ class ChallengeCard extends StatelessWidget {
       challenge.dislikedBy.remove(firebaseId);
     } else {
       challenge.dislikedBy.add(firebaseId);
+      challenge.likedBy.remove(firebaseId);
     }
     context.read<FirestoreHandler>().updateChallenge(challenge);
   }
@@ -26,6 +26,7 @@ class ChallengeCard extends StatelessWidget {
       challenge.likedBy.remove(firebaseId);
     } else {
       challenge.likedBy.add(firebaseId);
+      challenge.dislikedBy.remove(firebaseId);
     }
     context.read<FirestoreHandler>().updateChallenge(challenge);
   }
@@ -57,7 +58,7 @@ class ChallengeCard extends StatelessWidget {
                       onPressed: () => _dislikeChallenge(context, challenge),
                       icon: Icon(Icons.thumb_down,
                           color: challenge.dislikedBy.contains(firebaseId)
-                              ? Theme.of(context).colorScheme.secondary
+                              ? Theme.of(context).colorScheme.error
                               : Theme.of(context).colorScheme.onPrimary)),
                   IconButton(
                       onPressed: () => showDialog(

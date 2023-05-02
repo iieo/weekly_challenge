@@ -18,7 +18,7 @@ class Box extends StatelessWidget {
     return Container(
         padding: App.defaultPadding,
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
           color: Theme.of(context).colorScheme.primaryContainer,
           /*gradient: LinearGradient(
                 begin: Alignment.topLeft,
