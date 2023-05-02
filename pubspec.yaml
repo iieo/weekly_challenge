@@ -34,7 +34,7 @@ dependencies:
   # Use with the Workmanager class for background jobs headless execution.
   workmanager: ^0.5.1
   # Use with FlutterLocalNotificationsPlugin class for local push notifications.
-  flutter_local_notifications: ^8.2.0
+  flutter_local_notifications: ^14.0.0+1
   
 
 dev_dependencies:

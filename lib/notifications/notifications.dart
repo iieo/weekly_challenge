@@ -15,7 +15,7 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case checkChallengesTask:
-        print("$simpleTaskKey was executed. inputData = $inputData");
+        print("a was executed. inputData = $inputData");
         final prefs = await SharedPreferences.getInstance();
         prefs.setBool("test", true);
         print("Bool from prefs: ${prefs.getBool("test")}");
