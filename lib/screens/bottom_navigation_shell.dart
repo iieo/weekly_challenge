@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:weekly_challenge/main.dart';
 
 class BottomNavigationShell extends StatefulWidget {
   final Widget child;
@@ -26,7 +27,7 @@ class _BottomNavigationShellState extends State<BottomNavigationShell> {
       //change borderRadius of bottom bar items
       bottomNavigationBar: SalomonBottomBar(
         itemShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(4))),
+            borderRadius: BorderRadius.all(Radius.circular(App.defaultRadius))),
         currentIndex: _currentIndex,
         onTap: (i) {
           setState(() {

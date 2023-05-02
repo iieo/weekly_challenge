@@ -32,6 +32,7 @@ void main() async {
 class App extends StatelessWidget {
   const App({super.key});
 
+  static const double defaultRadius = 10;
   static const double defaultMargin = 30;
   static const EdgeInsets defaultPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 35);

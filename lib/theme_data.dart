@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/main.dart';
 
 const Color backgroundDark = Color.fromARGB(255, 11, 25, 46);
 const Color backgroundDarkBrighter = Color.fromARGB(255, 24, 43, 69);
@@ -87,7 +88,7 @@ final ThemeData themeData = ThemeData(
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(App.defaultRadius),
           ),
         ),
       ),
