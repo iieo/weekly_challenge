@@ -272,7 +272,7 @@ packages:
       sha256: "16622540f424c871e71150140da6a02e9df60c9536e46d3243300f18c206cbc3"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "3.4.1"
   fl_chart:
     dependency: "direct main"
     description:

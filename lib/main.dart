@@ -9,8 +9,13 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
+import 'notifications/notification_handler.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await initNotificationPermission();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
