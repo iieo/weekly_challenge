@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/file.dart';
 import 'package:weekly_challenge/firebase/firebase_auth_handler.dart';
 import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
@@ -108,6 +110,10 @@ class FirestoreHandler extends ChangeNotifier {
         .add(challengeParticipation.toMap());
     challengeParticipations.add(challengeParticipation);
     notifyListeners();
+  }
+
+  Future<void> uploadProfilePicture(Image newProfilePicture) async {
+    // save the new profile picture
   }
 
   Future<void> _fetchChallengeParticipations() async {
