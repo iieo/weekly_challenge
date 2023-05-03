@@ -35,7 +35,7 @@ class _AuthScreen extends State<AuthScreen> {
             child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(App.defaultRadius),
                   /*gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
