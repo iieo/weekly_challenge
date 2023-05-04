@@ -31,6 +31,6 @@ class Participant {
       id: "loading",
       name: "loading",
       email: "loading",
-      profilePictureUrl: "loading",
+      profilePictureUrl: null,
       points: 0);
 }

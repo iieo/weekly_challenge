@@ -29,6 +29,10 @@ class FirebaseAuthHandler {
     }
   }
 
+  static Future<String> getAccessToken() {
+    return FirebaseAuth.instance.currentUser!.getIdToken();
+  }
+
   static Future resendVerificationEmail() async {
     await FirebaseAuth.instance.currentUser!.sendEmailVerification();
   }

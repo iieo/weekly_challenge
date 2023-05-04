@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:weekly_challenge/utils.dart';
 
 class FirestoreHandler extends ChangeNotifier {
+  String token = "";
   List<Challenge> challenges = [];
   List<ChallengeParticipation> challengeParticipations = [];
-  Participant? participant;
+  Participant participant = Participant.loadingParticipant;
   bool? isDoneForToday;
 
   Future<void> _fetchChallenges() async {
@@ -71,19 +71,26 @@ class FirestoreHandler extends ChangeNotifier {
         Participant.fromMap(documentSnapshot.id, documentSnapshot.data()!);
   }
 
-  Future<void> uploadProfilePicture(File image) async {
+  Future<void> _fetchToken() async {
+    token = await FirebaseAuth.instance.currentUser!.getIdToken();
+  }
+
+  Future<void> uploadProfilePicture(Uint8List? data, String name) async {
+    if (data == null) return;
+    String extension = name.split('.').last;
     String userId = FirebaseAuth.instance.currentUser!.uid;
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child("users/$userId/profilePicture");
-    UploadTask uploadTask = storageReference.putFile(image);
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child("users/$userId/profilePicture.$extension");
+    UploadTask uploadTask = storageReference.putData(data);
     await uploadTask;
     String downloadUrl = await storageReference.getDownloadURL();
     await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
         .update({'profilePicture': downloadUrl});
-    participant!.profilePictureUrl = downloadUrl;
-    updateParticipant(participant!);
+    participant.profilePictureUrl = downloadUrl;
+    updateParticipant(participant);
   }
 
   Future<void> updateParticipant(Participant participant) async {
@@ -99,7 +106,7 @@ class FirestoreHandler extends ChangeNotifier {
     await deleteChallengeParticipationOnDate(DateTime.now());
     ChallengeParticipation challengeParticipation = ChallengeParticipation(
       challengeId: challenge.id!,
-      pariticipantId: participant!.id,
+      pariticipantId: participant.id,
       dateCompleted: DateTime.now(),
     );
     await FirebaseFirestore.instance
@@ -113,7 +120,7 @@ class FirestoreHandler extends ChangeNotifier {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
         .instance
         .collection('challengeParticipations')
-        .where('pariticipantId', isEqualTo: participant!.id)
+        .where('pariticipantId', isEqualTo: participant.id)
         .get();
 
     challengeParticipations = querySnapshot.docs
@@ -137,7 +144,7 @@ class FirestoreHandler extends ChangeNotifier {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
         .instance
         .collection('challengeParticipations')
-        .where('pariticipantId', isEqualTo: participant!.id)
+        .where('pariticipantId', isEqualTo: participant.id)
         .where('dateCompleted',
             isGreaterThanOrEqualTo:
                 Timestamp.fromDate(DateTime(date.year, date.month, date.day)))
@@ -194,7 +201,7 @@ class FirestoreHandler extends ChangeNotifier {
         element.dateCompleted.day == day.day &&
         element.dateCompleted.month == day.month &&
         element.dateCompleted.year == day.year &&
-        element.pariticipantId == participant!.id);
+        element.pariticipantId == participant.id);
   }
 
   void selectChallengeForWeek(int weeksSinceNow) {
@@ -256,6 +263,7 @@ class FirestoreHandler extends ChangeNotifier {
   void fetchData(User user) async {
     print('fetching data');
     await _fetchParticipant(user);
+    await _fetchToken();
     await _fetchChallengeParticipations();
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();

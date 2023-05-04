@@ -27,20 +27,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return nameController.text.characters.length > 5;
   }
 
-  void _changeProfilePicture() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-      allowedExtensions: ['jpg', 'png'],
-    );
-    if (result == null) return;
-    File file = File(result.files.single.path!);
-    FirestoreHandler().uploadProfilePicture(file);
+  void _changeProfilePicture() {
+    FilePicker.platform
+        .pickFiles(type: FileType.image, allowMultiple: false)
+        .then((result) {
+      if (result == null) return;
+      context.read<FirestoreHandler>().uploadProfilePicture(
+          result.files.single.bytes, result.files.single.name);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Participant participant = context.watch<FirestoreHandler>().participant ??
-        Participant.loadingParticipant;
+    Participant participant = context.watch<FirestoreHandler>().participant;
 
     nameController.text = participant.name;
     pointController.text = participant.points.toString();
@@ -57,8 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   CircleAvatar(
                     radius: 100,
                     foregroundImage: participant.profilePictureUrl != null
-                        ? CachedNetworkImageProvider(
-                            participant.profilePictureUrl!)
+                        ? NetworkImage(
+                            participant.profilePictureUrl!,
+                            scale: 1.0,
+                          )
                         : const AssetImage("/images/empty_profile.png")
                             as ImageProvider,
                   ),
