@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/task.dart';
+import 'package:weekly_challenge/models/task_manager.dart';
 import 'package:weekly_challenge/navigation/router.dart';
 import 'package:weekly_challenge/theme_data.dart';
 import 'firebase_options.dart';

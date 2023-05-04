@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/models/task.dart';
+import 'package:weekly_challenge/models/task_manager.dart';
 
 class TaskCard extends StatefulWidget {
   final Task task;

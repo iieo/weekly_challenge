@@ -64,24 +64,36 @@ class _ChallengesScreenState extends State<ChallengesScreen>
                   child: TabBarView(
                 controller: _tabController,
                 children: [
-                  ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.05,
-                          vertical: MediaQuery.of(context).size.height * 0.01),
-                      itemCount: challengesNotCompleted.length,
-                      itemBuilder: (context, index) {
-                        return ChallengeCard(
-                            challenge: challengesNotCompleted[index]);
-                      }),
-                  ListView.builder(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: MediaQuery.of(context).size.width * 0.05,
-                          vertical: MediaQuery.of(context).size.height * 0.01),
-                      itemCount: challengesCompleted.length,
-                      itemBuilder: (context, index) {
-                        return ChallengeCard(
-                            challenge: challengesCompleted[index]);
-                      }),
+                  Column(children: [
+                    Expanded(
+                        child: ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.05,
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.01),
+                            itemCount: challengesNotCompleted.length,
+                            itemBuilder: (context, index) {
+                              return ChallengeCard(
+                                  challenge: challengesNotCompleted[index]);
+                            })),
+                    const SizedBox(height: 70)
+                  ]),
+                  Column(children: [
+                    Expanded(
+                        child: ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.05,
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.01),
+                            itemCount: challengesCompleted.length,
+                            itemBuilder: (context, index) {
+                              return ChallengeCard(
+                                  challenge: challengesCompleted[index]);
+                            })),
+                    const SizedBox(height: 70)
+                  ]),
                 ],
               ))
             ]));

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weekly_challenge/components/button.dart';
+import 'package:weekly_challenge/models/task_manager.dart';
 import 'package:weekly_challenge/screens/homescreen/components/box.dart';
 import 'package:weekly_challenge/screens/tasks_screen/components/add_task_fab.dart';
 import 'package:weekly_challenge/screens/tasks_screen/components/task_item.dart';
@@ -42,12 +42,15 @@ class TasksScreen extends StatelessWidget {
                       return b.dateCompleted!.compareTo(a.dateCompleted!);
                     }
                   });
-                  return Expanded(
-                      child: ListView.builder(
-                          itemCount: tasks.length,
-                          itemBuilder: (context, index) {
-                            return TaskCard(task: tasks[index]);
-                          }));
+                  return Column(children: [
+                    Expanded(
+                        child: ListView.builder(
+                            itemCount: tasks.length,
+                            itemBuilder: (context, index) {
+                              return TaskCard(task: tasks[index]);
+                            })),
+                    const SizedBox(height: 70)
+                  ]);
                 } else {
                   return Center(
                       child: SizedBox(

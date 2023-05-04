@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:weekly_challenge/components/button.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/main.dart';
 
@@ -64,7 +63,11 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
     bool? isDoneForToday = context.watch<FirestoreHandler>().isDoneForToday;
     if (isDoneForToday == null) {
       return const SizedBox(
-          height: 50, width: 50, child: CircularProgressIndicator());
+          height: 50,
+          width: 50,
+          child: Center(
+              child: SizedBox(
+                  width: 50, height: 50, child: CircularProgressIndicator())));
     }
     if (isDoneForToday && isLoading) {
       _controller.value = 1;
@@ -98,13 +101,14 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
                   scale: _shrinkAnimation.value,
                   child: Opacity(
                       opacity: _shrinkAnimation.value,
-                      child: Button(
-                        onPressed: _onPressed,
-                        text: "Erledigt?",
-                        backgroundColor:
-                            Theme.of(context).colorScheme.secondary,
-                        foregorundColor: Colors.white,
-                      )));
+                      child: SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: _onPressed,
+                            child: Text("Erledigt?",
+                                style: Theme.of(context).textTheme.labelMedium),
+                          ))));
             })
       ],
     );

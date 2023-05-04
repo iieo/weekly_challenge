@@ -1,19 +1,8 @@
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-Image defaultProfile =
-    const Image(image: AssetImage("/images/empty_profile.png"));
-
 class Participant {
   String id;
   String name;
   String email;
   String? profilePictureUrl;
-  Image profileImage = defaultProfile;
-  CachedNetworkImage? profilePicture;
   int points;
 
   Participant(

@@ -1,12 +1,9 @@
-import 'dart:math';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/file.dart';
-import 'package:weekly_challenge/firebase/firebase_auth_handler.dart';
 import 'package:weekly_challenge/models/challenge_participation.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/models/participant.dart';
@@ -74,19 +71,19 @@ class FirestoreHandler extends ChangeNotifier {
         Participant.fromMap(documentSnapshot.id, documentSnapshot.data()!);
   }
 
-  Future<void> _fetchParticipantsProfilePicture() async {
-    if (FirebaseAuth.instance.currentUser == null) return;
-    final file = FirebaseStorage.instance.ref().child(
-        'users/${FirebaseAuth.instance.currentUser!.uid}/profilePicture');
-    participant?.profilePicture = CachedNetworkImage(
-      imageUrl: file.fullPath,
-      placeholder: (context, url) => Center(
-          child: SizedBox(
-              height: 50,
-              width: 50,
-              child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary))),
-    );
+  Future<void> uploadProfilePicture(File image) async {
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    Reference storageReference =
+        FirebaseStorage.instance.ref().child("users/$userId/profilePicture");
+    UploadTask uploadTask = storageReference.putFile(image);
+    await uploadTask;
+    String downloadUrl = await storageReference.getDownloadURL();
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .update({'profilePicture': downloadUrl});
+    participant!.profilePictureUrl = downloadUrl;
+    updateParticipant(participant!);
   }
 
   Future<void> updateParticipant(Participant participant) async {
@@ -110,10 +107,6 @@ class FirestoreHandler extends ChangeNotifier {
         .add(challengeParticipation.toMap());
     challengeParticipations.add(challengeParticipation);
     notifyListeners();
-  }
-
-  Future<void> uploadProfilePicture(Image newProfilePicture) async {
-    // save the new profile picture
   }
 
   Future<void> _fetchChallengeParticipations() async {
@@ -266,7 +259,7 @@ class FirestoreHandler extends ChangeNotifier {
     await _fetchChallengeParticipations();
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();
-    await _fetchParticipantsProfilePicture();
+
     notifyListeners();
 
     selectChallengeForWeek(0);
