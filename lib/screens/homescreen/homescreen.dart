@@ -92,6 +92,10 @@ class _HomeScreenState extends State<HomeScreen> {
         Box(
           headline: "Nächste Challenge",
           description: challengeNextWeek?.title ?? "Loading...",
+          child: challengeNextWeek != null
+              ? Text(challengeNextWeek.description,
+                  style: Theme.of(context).textTheme.bodyMedium)
+              : const SizedBox(),
         ),
         const SizedBox(height: 70)
       ],

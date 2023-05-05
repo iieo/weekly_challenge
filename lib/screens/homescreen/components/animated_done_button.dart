@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:weekly_challenge/components/loading_indicator.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/main.dart';
 
@@ -62,12 +63,7 @@ class _AnimatedDoneButtonState extends State<AnimatedDoneButton>
   Widget build(BuildContext context) {
     bool? isDoneForToday = context.watch<FirestoreHandler>().isDoneForToday;
     if (isDoneForToday == null) {
-      return const SizedBox(
-          height: 50,
-          width: 50,
-          child: Center(
-              child: SizedBox(
-                  width: 50, height: 50, child: CircularProgressIndicator())));
+      return const LoadingIndicator();
     }
     if (isDoneForToday && isLoading) {
       _controller.value = 1;

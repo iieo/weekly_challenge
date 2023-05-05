@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ScreenContainer extends StatelessWidget {
+class ScreenContainer extends StatefulWidget {
   final String? title;
   final Widget? floatingActionButton;
   final List<Widget> children;
@@ -13,27 +13,35 @@ class ScreenContainer extends StatelessWidget {
       this.isScrollEnabled = true});
 
   @override
+  State<ScreenContainer> createState() => _ScreenContainerState();
+}
+
+class _ScreenContainerState extends State<ScreenContainer> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: title != null
+      appBar: widget.title != null
           ? AppBar(
-              title:
-                  Text(title!, style: Theme.of(context).textTheme.titleLarge),
+              title: Text(widget.title!,
+                  style: Theme.of(context).textTheme.titleLarge),
             )
           : null,
       body: SafeArea(
-        child: isScrollEnabled
+        child: widget.isScrollEnabled
             ? ListView(
+                controller: _scrollController,
                 padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.05,
                     vertical: MediaQuery.of(context).size.height * 0.01),
-                children: children,
+                children: widget.children,
               )
             : Column(
-                children: children,
+                children: widget.children,
               ),
       ),
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: widget.floatingActionButton,
     );
   }
 }

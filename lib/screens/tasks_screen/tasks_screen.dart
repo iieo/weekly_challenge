@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weekly_challenge/components/loading_indicator.dart';
 import 'package:weekly_challenge/models/task_manager.dart';
 import 'package:weekly_challenge/screens/homescreen/components/box.dart';
 import 'package:weekly_challenge/screens/tasks_screen/components/add_task_fab.dart';
@@ -37,7 +38,7 @@ class TasksScreen extends StatelessWidget {
                             return TaskCard(task: tasks[index]);
                           });
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const LoadingIndicator();
                     }
                   })),
           const SizedBox(height: 70)
