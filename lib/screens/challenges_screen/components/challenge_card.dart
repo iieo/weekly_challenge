@@ -9,7 +9,7 @@ class ChallengeCard extends StatelessWidget {
   final Challenge challenge;
   const ChallengeCard({super.key, required this.challenge});
 
-  void _dislikeChallenge(BuildContext context, Challenge challenge) {
+  void dislikeChallenge(BuildContext context, Challenge challenge) {
     String firebaseId = FirebaseAuth.instance.currentUser!.uid;
     if (challenge.dislikedBy.contains(firebaseId)) {
       challenge.dislikedBy.remove(firebaseId);
@@ -20,7 +20,7 @@ class ChallengeCard extends StatelessWidget {
     context.read<FirestoreHandler>().updateChallenge(challenge);
   }
 
-  void _likeChallenge(BuildContext context, Challenge challenge) {
+  void likeChallenge(BuildContext context, Challenge challenge) {
     String firebaseId = FirebaseAuth.instance.currentUser!.uid;
     if (challenge.likedBy.contains(firebaseId)) {
       challenge.likedBy.remove(firebaseId);
@@ -29,6 +29,44 @@ class ChallengeCard extends StatelessWidget {
       challenge.dislikedBy.remove(firebaseId);
     }
     context.read<FirestoreHandler>().updateChallenge(challenge);
+  }
+
+  List<Widget> getTrailingButtons(BuildContext context) {
+    String firebaseId = FirebaseAuth.instance.currentUser!.uid;
+    bool isUserCreator = challenge.createdBy == firebaseId;
+
+    if (isUserCreator) {
+      return [
+        IconButton(
+            onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AddChallengeDialog(
+                      prefilledData: challenge,
+                    )),
+            icon: Icon(Icons.edit,
+                color: Theme.of(context).colorScheme.onPrimary)),
+        IconButton(
+            onPressed: () =>
+                context.read<FirestoreHandler>().deleteChallenge(challenge),
+            icon: Icon(Icons.delete,
+                color: Theme.of(context).colorScheme.onPrimary))
+      ];
+    } else {
+      return [
+        IconButton(
+            onPressed: () => likeChallenge(context, challenge),
+            icon: Icon(Icons.thumb_up,
+                color: challenge.likedBy.contains(firebaseId)
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.onPrimary)),
+        IconButton(
+            onPressed: () => dislikeChallenge(context, challenge),
+            icon: Icon(Icons.thumb_down,
+                color: challenge.dislikedBy.contains(firebaseId)
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.onPrimary))
+      ];
+    }
   }
 
   @override
@@ -47,33 +85,6 @@ class ChallengeCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  IconButton(
-                      onPressed: () => _likeChallenge(context, challenge),
-                      icon: Icon(Icons.thumb_up,
-                          color: challenge.likedBy.contains(firebaseId)
-                              ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context).colorScheme.onPrimary)),
-                  IconButton(
-                      onPressed: () => _dislikeChallenge(context, challenge),
-                      icon: Icon(Icons.thumb_down,
-                          color: challenge.dislikedBy.contains(firebaseId)
-                              ? Theme.of(context).colorScheme.error
-                              : Theme.of(context).colorScheme.onPrimary)),
-                  IconButton(
-                      onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => AddChallengeDialog(
-                                prefilledData: challenge,
-                              )),
-                      icon: Icon(Icons.edit,
-                          color: Theme.of(context).colorScheme.onPrimary)),
-                  IconButton(
-                      onPressed: () => context
-                          .read<FirestoreHandler>()
-                          .deleteChallenge(challenge),
-                      icon: Icon(Icons.delete,
-                          color: Theme.of(context).colorScheme.onPrimary))
-                ])));
+                children: getTrailingButtons(context))));
   }
 }
