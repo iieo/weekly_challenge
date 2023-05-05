@@ -13,6 +13,7 @@ class FirestoreHandler extends ChangeNotifier {
   String token = "";
   List<Challenge> challenges = [];
   List<ChallengeParticipation> challengeParticipations = [];
+  List<Participant> participants = [];
   Participant participant = Participant.loadingParticipant;
   bool? isDoneForToday;
 
@@ -120,11 +121,19 @@ class FirestoreHandler extends ChangeNotifier {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
         .instance
         .collection('challengeParticipations')
-        .where('pariticipantId', isEqualTo: participant.id)
         .get();
 
     challengeParticipations = querySnapshot.docs
         .map((e) => ChallengeParticipation.fromMap(e.id, e.data()))
+        .toList();
+  }
+
+  Future<void> _fetchAllParticipants() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance.collection('users').get();
+
+    participants = querySnapshot.docs
+        .map((e) => Participant.fromMap(e.id, e.data()))
         .toList();
   }
 
@@ -231,8 +240,8 @@ class FirestoreHandler extends ChangeNotifier {
     updateChallenge(challenge);
   }
 
-  Map<String, List<ChallengeParticipation>> getChallengeParticipationsForWeek(
-      {int weeksSinceNow = 0}) {
+  Map<Participant, List<ChallengeParticipation>>
+      getChallengeParticipationsForWeek({int weeksSinceNow = 0}) {
     DateTime monday = getMondayForWeek(weeksSinceNow);
     DateTime sunday = getMondayForWeek(weeksSinceNow + 1);
 
@@ -256,7 +265,17 @@ class FirestoreHandler extends ChangeNotifier {
       }
     }
 
-    return challengeParticipationsForWeekMap;
+    Map<Participant, List<ChallengeParticipation>>
+        challengeParticipationsForWeekMap2 = {};
+
+    for (var participant in participants) {
+      if (challengeParticipationsForWeekMap.containsKey(participant.id)) {
+        challengeParticipationsForWeekMap2[participant] =
+            challengeParticipationsForWeekMap[participant.id]!;
+      }
+    }
+
+    return challengeParticipationsForWeekMap2;
   }
 
   ///this method is called once the user has logged in
@@ -264,6 +283,7 @@ class FirestoreHandler extends ChangeNotifier {
     print('fetching data');
     await _fetchParticipant(user);
     await _fetchToken();
+    await _fetchAllParticipants();
     await _fetchChallengeParticipations();
     isDoneForToday = isChallengeCompletedForToday();
     await _fetchChallenges();

@@ -41,13 +41,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _undoDone(BuildContext context) {
+    context
+        .read<FirestoreHandler>()
+        .deleteChallengeParticipationOnDate(DateTime.now());
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text("Challenge zurückgezogen"),
       duration: Duration(seconds: 1),
     ));
-    context
-        .read<FirestoreHandler>()
-        .deleteChallengeParticipationOnDate(DateTime.now());
   }
 
   @override

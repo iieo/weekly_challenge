@@ -29,6 +29,10 @@ class FirebaseAuthHandler {
     }
   }
 
+  static String getEmailAddress() {
+    return FirebaseAuth.instance.currentUser!.email!;
+  }
+
   static Future<String> getAccessToken() {
     return FirebaseAuth.instance.currentUser!.getIdToken();
   }

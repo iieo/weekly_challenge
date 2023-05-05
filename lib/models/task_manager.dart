@@ -7,14 +7,9 @@ import 'package:weekly_challenge/models/task.dart';
 
 class TaskManager extends ChangeNotifier {
   File? _taskFile;
-  List<Task>? _tasks;
+  List<Task> tasks = [];
 
-  Future<List<Task>> get tasks async {
-    _tasks ??= await _readTasks();
-    return _tasks!;
-  }
-
-  Future<List<Task>> _readTasks() async {
+  Future<List<Task>> readTasks() async {
     final directory = await getApplicationDocumentsDirectory();
     _taskFile = File('${directory.path}/tasks.json');
 
@@ -27,7 +22,7 @@ class TaskManager extends ChangeNotifier {
     String jsonData = _taskFile!.readAsStringSync();
     List<dynamic> jsonTasks = jsonDecode(jsonData);
 
-    List<Task> tasks = [];
+    tasks.clear();
     for (var jsonTask in jsonTasks) {
       tasks.add(Task(
           name: jsonTask['name'],
@@ -43,12 +38,25 @@ class TaskManager extends ChangeNotifier {
             task.dateCompleted == null ||
             task.dateCompleted!.difference(DateTime.now()).inDays < 1)
         .toList();
+
+    sortTasks();
     return tasks;
   }
 
+  void sortTasks() {
+    tasks.sort((a, b) {
+      if (a.isCompleted && !b.isCompleted) {
+        return 1;
+      } else if (!a.isCompleted && b.isCompleted) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
   void addTask(Task task) {
-    _tasks!.add(task);
-    _readTasks();
+    tasks.add(task);
     _writeTasks();
     notifyListeners();
   }
@@ -57,34 +65,35 @@ class TaskManager extends ChangeNotifier {
     task.isCompleted = !task.isCompleted;
     if (task.isCompleted) {
       task.dateCompleted = DateTime.now();
+    } else {
+      task.dateCompleted = null;
     }
-    _tasks!.remove(task);
-    _tasks!.add(task);
+    sortTasks();
     _writeTasks();
     notifyListeners();
   }
 
   void removeTask(Task task) {
-    _tasks!.remove(task);
+    tasks.remove(task);
     _writeTasks();
     notifyListeners();
   }
 
   void deleteAllTasks() {
-    _tasks!.clear();
+    tasks.clear();
     _writeTasks();
     notifyListeners();
   }
 
   void deleteTask(Task task) {
-    _tasks!.remove(task);
+    tasks.remove(task);
     _writeTasks();
     notifyListeners();
   }
 
   void _writeTasks() {
     List<Map<String, String>> jsonTasks = [];
-    for (var task in _tasks!) {
+    for (var task in tasks!) {
       jsonTasks.add({
         'name': task.name,
         'category': task.category,

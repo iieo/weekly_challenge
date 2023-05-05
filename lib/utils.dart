@@ -108,3 +108,17 @@ String getWeekdayNameByNumber(int weekday) {
       return "Fehler";
   }
 }
+
+List<Color> colorPalette = [
+  Colors.amber,
+  const Color(0xffaa4cfc),
+  const Color(0xff27b6fc),
+  const Color(0xff888888),
+  const Color(0xffb74093),
+  const Color(0xff2c3e50),
+  const Color(0xffe74c3c),
+  const Color(0xff2ecc71),
+  const Color(0xff3498db),
+  const Color(0xff9b59b6),
+  const Color(0xff1abc9c),
+];

@@ -12,18 +12,7 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  late bool isCompleted;
-
-  @override
-  void initState() {
-    isCompleted = widget.task.isCompleted;
-    super.initState();
-  }
-
-  void _toggleTask(value) {
-    setState(() {
-      isCompleted = value!;
-    });
+  void _toggleTask() {
     context.read<TaskManager>().toggleTask(widget.task);
   }
 
@@ -33,7 +22,7 @@ class _TaskCardState extends State<TaskCard> {
         key: Key(widget.task.hashCode.toString()),
         confirmDismiss: (direction) {
           if (direction == DismissDirection.endToStart) {
-            _toggleTask(!isCompleted);
+            _toggleTask();
             return Future.value(false);
           }
           return Future.value(true);
@@ -58,9 +47,9 @@ class _TaskCardState extends State<TaskCard> {
           }
         },
         child: CheckboxListTile(
-            value: isCompleted,
-            onChanged: _toggleTask,
-            title: isCompleted
+            value: widget.task.isCompleted,
+            onChanged: (x) => _toggleTask(),
+            title: widget.task.isCompleted
                 ? Text(widget.task.name,
                     style: const TextStyle(
                       decoration: TextDecoration.lineThrough,

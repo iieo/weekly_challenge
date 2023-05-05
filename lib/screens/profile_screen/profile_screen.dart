@@ -101,7 +101,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         prefixIcon: Icon(Icons.email),
                         prefixText: 'Email:'),
                     enabled: false,
-                    controller: TextEditingController(text: participant.email),
+                    controller: TextEditingController(
+                        text: FirebaseAuthHandler.getEmailAddress()),
                     textAlign: TextAlign.center,
                     readOnly: true,
                     style: Theme.of(context).textTheme.titleMedium),
