@@ -52,18 +52,18 @@ class AddChallengeDialogState extends State<AddChallengeDialog> {
             TextFormField(
                 initialValue: title,
                 decoration: InputDecoration(
-                    labelStyle: Theme.of(context).textTheme.labelSmall,
+                    labelStyle: Theme.of(context).textTheme.labelMedium,
                     hintStyle: Theme.of(context).textTheme.labelMedium,
                     labelText: "Titel",
-                    hintText: "z.B. 10km laufen"),
+                    hintText: "Laufe 2 km im Wald"),
                 onChanged: (value) => setState(() => title = value)),
             TextFormField(
                 initialValue: description,
                 maxLines: null,
                 decoration: InputDecoration(
                     labelText: "Beschreibung",
-                    labelStyle: Theme.of(context).textTheme.labelSmall,
-                    hintStyle: Theme.of(context).textTheme.labelSmall,
+                    labelStyle: Theme.of(context).textTheme.labelMedium,
+                    hintStyle: Theme.of(context).textTheme.labelMedium,
                     hintText:
                         "z.B. 10km laufen und dabei 10x anhalten und 10 Liegestütze machen"),
                 onChanged: (value) => setState(() => description = value)),
@@ -73,12 +73,12 @@ class AddChallengeDialogState extends State<AddChallengeDialog> {
           TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: Text("Abbrechen",
-                  style: Theme.of(context).textTheme.labelSmall)),
+                  style: Theme.of(context).textTheme.labelMedium)),
           TextButton(
               onPressed: () => _submitChallenge(context),
               child: Text(
                   widget.prefilledData == null ? "Hinzufügen" : "Speichern",
-                  style: Theme.of(context).textTheme.labelSmall))
+                  style: Theme.of(context).textTheme.labelMedium))
         ]);
   }
 }

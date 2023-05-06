@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:weekly_challenge/components/loading_indicator.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/task.dart';
+import 'package:weekly_challenge/models/task_manager.dart';
 import 'package:weekly_challenge/navigation/router.dart';
 import 'package:weekly_challenge/theme_data.dart';
 import 'firebase_options.dart';
@@ -51,12 +53,7 @@ class App extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(
-                            color: Theme.of(context).colorScheme.onPrimary)));
+                return const LoadingIndicator();
               } else {
                 User? user = snapshot.data;
                 if (user != null && user.emailVerified) {
@@ -66,7 +63,7 @@ class App extends StatelessWidget {
                     routerConfig: router,
                     debugShowCheckedModeBanner: false,
                     title: "Weekly Challenge",
-                    theme: themeData);
+                    theme: themeData2);
               }
             }));
   }

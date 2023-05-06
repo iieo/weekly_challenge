@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:weekly_challenge/components/loading_indicator.dart';
 import 'package:weekly_challenge/main.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -80,11 +81,6 @@ class LoadingScreen extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
         child: Container(
             color: Colors.white.withOpacity(0.5),
-            child: Center(
-                child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(
-                        color: Theme.of(context).colorScheme.onPrimary)))));
+            child: const LoadingIndicator()));
   }
 }

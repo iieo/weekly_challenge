@@ -1,5 +1,6 @@
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:provider/provider.dart';
+import 'package:weekly_challenge/components/loading_indicator.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/challenges.dart';
 import 'package:weekly_challenge/utils.dart';
@@ -14,12 +15,7 @@ class WeekStepper extends StatelessWidget {
         context.watch<FirestoreHandler>().getChallengeForWeek();
 
     if (todaysChallenge == null) {
-      return Center(
-          child: SizedBox(
-              height: 50,
-              width: 50,
-              child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary)));
+      return const LoadingIndicator();
     }
     DateTime firstDate = todaysChallenge.activeSince!;
     for (int i = 0; i < 7; i++) {
@@ -27,8 +23,7 @@ class WeekStepper extends StatelessWidget {
           DateTime(firstDate.year, firstDate.month, firstDate.day + i)));
     }
 
-    DateTime today = DateTime.now();
-    int indexToday = today.difference(firstDate).inDays;
+    int indexToday = DateTime.now().difference(firstDate).inDays;
 
     Widget getStepAvatar(int index) {
       if (index > indexToday) {
@@ -56,7 +51,7 @@ class WeekStepper extends StatelessWidget {
           title: getWeekdayNameByNumber(
               DateTime(firstDate.year, firstDate.month, firstDate.day + index)
                   .weekday));
-    });
+    }, growable: false);
 
     return EasyStepper(
       finishedStepBorderColor: Colors.transparent,
@@ -76,6 +71,8 @@ class WeekStepper extends StatelessWidget {
       defaultLineColor: Theme.of(context).colorScheme.onPrimary,
       lineDotRadius: 2,
       borderThickness: 0,
+      enableStepTapping: false,
+      disableScroll: true,
     );
   }
 }
