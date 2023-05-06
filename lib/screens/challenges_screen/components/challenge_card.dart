@@ -73,6 +73,7 @@ class ChallengeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String firebaseId = FirebaseAuth.instance.currentUser!.uid;
     return Card(
+        color: Theme.of(context).colorScheme.surface,
         child: ListTile(
             title: Text(challenge.title,
                 style: Theme.of(context).textTheme.titleMedium),

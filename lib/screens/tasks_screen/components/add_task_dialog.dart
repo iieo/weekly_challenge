@@ -14,14 +14,18 @@ class AddTaskDialog extends StatelessWidget {
             style: Theme.of(context).textTheme.labelMedium),
         content: TextField(
             controller: taskNameController,
-            decoration: const InputDecoration(hintText: "Aufgabe")),
+            decoration: InputDecoration(
+                labelStyle: Theme.of(context).textTheme.labelMedium,
+                hintStyle: Theme.of(context).textTheme.labelMedium,
+                labelText: "Aufgabe",
+                hintText: "Wäsche waschen")),
         actions: [
           TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               child: Text("Abbrechen",
-                  style: Theme.of(context).textTheme.labelSmall)),
+                  style: Theme.of(context).textTheme.labelMedium)),
           TextButton(
               onPressed: () {
                 context

@@ -63,7 +63,7 @@ class App extends StatelessWidget {
                     routerConfig: router,
                     debugShowCheckedModeBanner: false,
                     title: "Weekly Challenge",
-                    theme: themeData);
+                    theme: themeData2);
               }
             }));
   }
