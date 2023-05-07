@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/task.dart';
 import 'package:weekly_challenge/navigation/router.dart';
+import 'package:weekly_challenge/notifications/background_processing.dart';
 import 'package:weekly_challenge/theme_data.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,10 +16,12 @@ import 'notifications/notification_handler.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await initNotificationPermission();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
   );
 
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
@@ -30,6 +34,9 @@ void main() async {
   if (kIsWeb) {
     FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
   }
+
+  await initNotificationPermission();
+  init_background_checks();
 
   runApp(const App());
 }

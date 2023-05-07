@@ -3,8 +3,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weekly_challenge/notifications/notification_handler.dart';
 import 'package:workmanager/workmanager.dart';
 
 const checkChallengesTask = "15minCheckTasks";
@@ -13,44 +15,41 @@ const checkChallengesTask = "15minCheckTasks";
     'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    switch (task) {
-      case checkChallengesTask:
-        print("a was executed. inputData = $inputData");
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setBool("test", true);
-        print("Bool from prefs: ${prefs.getBool("test")}");
-        break;
+    bool worked = false;
 
-      case Workmanager.iOSBackgroundTask:
-        print("The iOS background fetch was triggered");
-        Directory? tempDir = await getTemporaryDirectory();
-        String? tempPath = tempDir.path;
-        print(
-            "You can access other plugins in the background, for example Directory.getTemporaryDirectory(): $tempPath");
-        break;
+    initNotificationPermission();
+
+    try {
+      checkChallengesAndShowNotification();
+      worked = true;
+      print("workes");
+    } catch (e) {
+      print("asjkldj: $e");
     }
 
-    return Future.value(true);
+    return Future.value(false);
   });
 }
 
-void init() {
-  Workmanager().initialize(callbackDispatcher);
+void init_background_checks() {
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
   setUpTasks();
 }
 
 void setUpTasks() {
   // add tasks here
+  addChallengeCheckTask();
 }
 
 void addChallengeCheckTask() {
-  Platform.isAndroid
-      ? () {
-          Workmanager().registerPeriodicTask(
-            checkChallengesTask,
-            checkChallengesTask,
-            frequency: Duration(minutes: 15),
-          );
-        }
-      : null;
+  Workmanager().cancelAll();
+
+  Workmanager().registerPeriodicTask(
+    checkChallengesTask,
+    checkChallengesTask,
+    initialDelay: Duration(seconds: 1),
+    frequency: Duration(minutes: 1),
+  );
+
+  //Workmanager().registerOneOffTask("uniqueName", "simpleTask");
 }

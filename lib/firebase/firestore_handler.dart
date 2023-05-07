@@ -196,6 +196,10 @@ class FirestoreHandler extends ChangeNotifier {
     return challengeToday;
   }
 
+  static Future<bool> isChallengeDoneForToday() async {
+    return false;
+  }
+
   bool isChallengeDoneForDate(DateTime day) {
     return challengeParticipations.any((element) =>
         element.dateCompleted.day == day.day &&

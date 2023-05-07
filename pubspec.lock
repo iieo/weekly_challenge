@@ -334,22 +334,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  flutter_plugin_android_lifecycle:
-    dependency: transitive
-    description:
-      name: flutter_plugin_android_lifecycle
-      sha256: "8ffe990dac54a4a5492747added38571a5ab474c8e5d196809ea08849c69b1bb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.13"
-  flutter_profile_picture:
-    dependency: "direct main"
-    description:
-      name: flutter_profile_picture
-      sha256: "067caecef0d7162d3858eaca3c5859cbbb21b3e5704c2bc5b96b50ffe267f45d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -374,6 +358,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      sha256: "8ffe990dac54a4a5492747added38571a5ab474c8e5d196809ea08849c69b1bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.13"
+  flutter_profile_picture:
+    dependency: "direct main"
+    description:
+      name: flutter_profile_picture
+      sha256: "067caecef0d7162d3858eaca3c5859cbbb21b3e5704c2bc5b96b50ffe267f45d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

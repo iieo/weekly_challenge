@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Image defaultProfile =
-    const Image(image: AssetImage("/images/empty_profile.png"));
+    const Image(image: AssetImage("assets/images/empty_profile.png"));
 
 class Participant {
   String id;
