@@ -25,31 +25,47 @@ ColorScheme colorScheme = ColorScheme.fromSeed(
   onBackground: whiteColor,
   onError: Colors.white,
 );
+Color primaryColor2 = const Color.fromARGB(255, 60, 194, 143);
+ColorScheme colorScheme2 = ColorScheme.fromSeed(
+  seedColor: primaryColor2,
+  //const Color.fromARGB(255, 187, 134, 252),
+  brightness: Brightness.dark,
+  primary: primaryColor2,
+  //const Color.fromARGB(255, 187, 134, 252),
+  secondary: primaryColor2,
+  background: const Color.fromARGB(255, 18, 18, 18),
+  primaryContainer: const Color.fromARGB(255, 30, 30, 30),
+  surface: const Color.fromARGB(255, 30, 30, 30),
+  error: const Color.fromARGB(255, 207, 102, 121),
+  onPrimary: Colors.white,
+  onBackground: Colors.white,
+  onSurface: Colors.white,
+  onError: Colors.black,
+);
 
-/*const Color backgroundDark = Color.fromARGB(255, 20, 36, 62);
-const Color backgroundDarkBrighter = Color.fromARGB(255, 35, 63, 108);
-
-const Color primaryColor = Color.fromARGB(255, 39, 103, 68);
-const Color primaryColorBrighter = Color.fromARGB(255, 61, 164, 109);
-
-const Color secondaryColor = Color.fromARGB(255, 141, 93, 208);
-const Color secondaryColorDarker = Color.fromARGB(255, 121, 65, 200);
-
-const Color ternaryColor = Color.fromARGB(255, 50, 62, 153);
-const Color ternaryColorDarker = Color.fromARGB(255, 40, 50, 123);
-
-const Color fourthColor = Color.fromARGB(255, 24, 62, 75);
-const Color fourthColorDarker = Color.fromARGB(255, 20, 51, 62);
-
-const Color whiteColor = Color.fromARGB(255, 205, 215, 245);
-const Color whiteColorDarker = Color.fromARGB(255, 144, 150, 172);
-
-ColorScheme colorScheme = ColorScheme.fromSeed(
-    seedColor: primaryColor,
-    secondary: secondaryColor,
-    tertiary: ternaryColor,
-    brightness: Brightness.dark,
-    background: fourthColor);*/
+final ThemeData themeData2 = ThemeData(
+    pageTransitionsTheme: PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: NoPageTransitionBuilder(),
+        TargetPlatform.iOS: NoPageTransitionBuilder(),
+        TargetPlatform.fuchsia: NoPageTransitionBuilder(),
+        TargetPlatform.linux: NoPageTransitionBuilder(),
+        TargetPlatform.macOS: NoPageTransitionBuilder(),
+        TargetPlatform.windows: NoPageTransitionBuilder(),
+      },
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(App.defaultRadius),
+          ),
+        ),
+      ),
+    ),
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    colorScheme: colorScheme2,
+    textTheme: textTheme);
 
 final ThemeData themeData = ThemeData(
     pageTransitionsTheme: PageTransitionsTheme(
@@ -76,7 +92,7 @@ final ThemeData themeData = ThemeData(
       900: Color(0xff1a1a1a)
     }),
     primaryColor: primaryColor,
-    colorScheme: colorScheme,
+    colorScheme: colorScheme2,
     appBarTheme: const AppBarTheme(
         backgroundColor: primaryColor, foregroundColor: whiteColor),
     scaffoldBackgroundColor: backgroundDark,
@@ -93,49 +109,52 @@ final ThemeData themeData = ThemeData(
         ),
       ),
     ),
-    textTheme: const TextTheme(
-      titleSmall: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.normal,
-        decoration: TextDecoration.none,
-        color: whiteColorDarker,
-      ),
-      titleMedium: TextStyle(
-        fontSize: 18.0,
-        fontWeight: FontWeight.normal,
-        decoration: TextDecoration.none,
-        color: whiteColor,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.normal,
-        decoration: TextDecoration.none,
-        color: whiteColor,
-      ),
-      labelSmall: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.none,
-        color: Colors.white,
-      ),
-      labelMedium: TextStyle(
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.none,
-        color: Colors.white,
-      ),
-      labelLarge: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.none,
-        color: Colors.white,
-      ),
-      bodyMedium: TextStyle(
-          fontSize: 18.0,
-          fontWeight: FontWeight.normal,
-          decoration: TextDecoration.none,
-          color: whiteColorDarker),
-    ));
+    textTheme: textTheme);
+
+TextTheme textTheme = const TextTheme(
+  titleSmall: TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.normal,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(200, 255, 255, 255),
+  ),
+  titleMedium: TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(225, 255, 255, 255),
+  ),
+  titleLarge: TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.normal,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(255, 255, 255, 255),
+  ),
+  labelSmall: TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.bold,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(200, 255, 255, 255),
+  ),
+  labelMedium: TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.bold,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(225, 255, 255, 255),
+  ),
+  labelLarge: TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(255, 255, 255, 255),
+  ),
+  bodyMedium: TextStyle(
+    fontSize: 18.0,
+    fontWeight: FontWeight.normal,
+    decoration: TextDecoration.none,
+    color: Color.fromARGB(225, 255, 255, 255),
+  ),
+);
 
 class NoPageTransitionBuilder extends PageTransitionsBuilder {
   @override
