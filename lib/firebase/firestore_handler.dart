@@ -86,10 +86,6 @@ class FirestoreHandler extends ChangeNotifier {
     UploadTask uploadTask = storageReference.putData(data);
     await uploadTask;
     String downloadUrl = await storageReference.getDownloadURL();
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .update({'profilePicture': downloadUrl});
     participant.profilePictureUrl = downloadUrl;
     updateParticipant(participant);
   }
@@ -280,6 +276,11 @@ class FirestoreHandler extends ChangeNotifier {
     }
 
     return challengeParticipationsForWeekMap2;
+  }
+
+  void updateParticipantName(String text) async {
+    participant.name = text;
+    updateParticipant(participant);
   }
 
   ///this method is called once the user has logged in

@@ -93,7 +93,7 @@ class TaskManager extends ChangeNotifier {
 
   void _writeTasks() {
     List<Map<String, String>> jsonTasks = [];
-    for (var task in tasks!) {
+    for (var task in tasks) {
       jsonTasks.add({
         'name': task.name,
         'category': task.category,

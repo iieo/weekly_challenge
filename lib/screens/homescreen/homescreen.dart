@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weekly_challenge/firebase/firestore_handler.dart';
+import 'package:weekly_challenge/main.dart';
 import 'package:weekly_challenge/screens/homescreen/components/animated_done_button.dart';
 import 'package:weekly_challenge/screens/homescreen/components/box.dart';
 import 'package:weekly_challenge/screens/homescreen/components/friends_comparison.dart';
@@ -59,13 +60,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return ScreenContainer(
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: App.defaultBoxMargin),
         Box(
           headline: challengeThisWeek?.title ?? "Challenge loading...",
           description:
               challengeThisWeek?.description ?? "Description loading...",
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: App.defaultBoxMargin),
         Box(
           headline: "Heute",
           description: "Challenge erledigt?",
@@ -82,13 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: FriendsComparison(),
           ),
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: App.defaultBoxMargin),
         const Box(
           headline: "Deine Erfolg",
           description: "Aktuelle Woche",
           child: WeekStepper(),
         ),
-        const SizedBox(height: 35),
+        const SizedBox(height: App.defaultBoxMargin),
         Box(
           headline: "Nächste Challenge",
           description: challengeNextWeek?.title ?? "Loading...",
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: Theme.of(context).textTheme.bodyMedium)
               : const SizedBox(),
         ),
-        const SizedBox(height: 70)
+        const SizedBox(height: App.defaultBoxMargin * 4),
       ],
     );
   }

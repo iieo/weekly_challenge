@@ -92,7 +92,7 @@ class _ChallengesScreenState extends State<ChallengesScreen>
                               return ChallengeCard(
                                   challenge: challengesCompleted[index]);
                             })),
-                    const SizedBox(height: 70)
+                    const SizedBox(height: App.defaultBoxMargin * 4),
                   ]),
                 ],
               ))

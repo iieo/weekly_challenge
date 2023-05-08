@@ -38,7 +38,7 @@ void main() async {
   }
 
   await initNotificationPermission();
-  init_background_checks();
+  //init_background_checks();
 
   runApp(const App());
 }
@@ -48,6 +48,7 @@ class App extends StatelessWidget {
 
   static const double defaultRadius = 10;
   static const double defaultMargin = 30;
+  static const double defaultBoxMargin = 20;
   static const EdgeInsets defaultPadding =
       EdgeInsets.symmetric(horizontal: 20, vertical: 35);
 
