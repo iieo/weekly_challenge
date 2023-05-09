@@ -20,7 +20,6 @@ class NotificationHandler {
 
   static void init() {
     FirebaseMessaging.onMessage.listen(_handleMessage);
-    FirebaseMessaging.onBackgroundMessage(_handleMessage);
 
     //print token
     FirebaseMessaging.instance.getToken().then((token) {
