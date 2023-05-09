@@ -7,13 +7,12 @@ import 'package:weekly_challenge/firebase/firestore_handler.dart';
 import 'package:weekly_challenge/models/task.dart';
 import 'package:weekly_challenge/models/task_manager.dart';
 import 'package:weekly_challenge/navigation/router.dart';
-import 'package:weekly_challenge/notifications/background_processing.dart';
 import 'package:weekly_challenge/theme_data.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
-import 'notifications/notification_handler.dart';
+import 'firebase/notification_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  if (kIsWeb) {
+    FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+  }
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
   );
@@ -33,12 +34,8 @@ void main() async {
       print('User is signed in!');
     }
   });
-  if (kIsWeb) {
-    FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-  }
 
-  await initNotificationPermission();
-  //init_background_checks();
+  NotificationHandler.init();
 
   runApp(const App());
 }

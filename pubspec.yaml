@@ -42,6 +42,7 @@ dependencies:
   # Use with FlutterLocalNotificationsPlugin class for local push notifications.
   flutter_local_notifications: ^14.0.0+1
   toggle_switch: ^2.1.0
+  firebase_messaging: ^14.5.0
   
 
 dev_dependencies:

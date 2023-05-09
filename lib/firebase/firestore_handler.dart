@@ -202,7 +202,21 @@ class FirestoreHandler extends ChangeNotifier {
   }
 
   static Future<bool> isChallengeDoneForToday() async {
-    return false;
+    String userId = FirebaseAuth.instance.currentUser!.uid;
+    DateTime today = DateTime.now();
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await FirebaseFirestore
+        .instance
+        .collection('challengeParticipations')
+        .where('pariticipantId', isEqualTo: userId)
+        .where('dateCompleted',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+                DateTime(today.year, today.month, today.day)))
+        .where('dateCompleted',
+            isLessThan: Timestamp.fromDate(
+                DateTime(today.year, today.month, today.day + 1)))
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
   }
 
   bool isChallengeDoneForDate(DateTime day) {
